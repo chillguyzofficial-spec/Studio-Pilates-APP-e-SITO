@@ -11,8 +11,8 @@
 <link rel="apple-touch-icon" href="assets/icone/icona-180.png">
 <link rel="preload" href="assets/fonts/gilda-display-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/base.css?v=3">
-<link rel="stylesheet" href="assets/css/sito.css?v=3">
+<link rel="stylesheet" href="assets/css/base.css?v=4">
+<link rel="stylesheet" href="assets/css/sito.css?v=4">
 <meta property="og:title" content="Prezzi · Cento Respiri">
 <meta property="og:description" content="I prezzi di Cento Respiri, pilates reformer a Torino: prova gratuita, carnet da 5 e 10 ingressi, mensile illimitato, lezioni private.">
 <meta property="og:type" content="website">
@@ -79,6 +79,11 @@
     </div>
   </div>
 </section>
+<section class="wrap sez conviene" data-conviene aria-live="polite" style="padding-top:0">
+  <div class="testa"><div class="eti">Fai due conti</div><h2 class="h2">Quale formula ti conviene?</h2><p class="p2">Quante volte a settimana pensi di venire?</p></div>
+  <div class="conv__scelte" role="group" aria-label="Lezioni a settimana"><button type="button" data-volte="1" aria-pressed="false">1<small>volta</small></button><button type="button" data-volte="2" aria-pressed="false">2<small>volte</small></button><button type="button" data-volte="3" aria-pressed="false">3<small>volte</small></button><button type="button" data-volte="4" aria-pressed="false">4<small>volte</small></button></div>
+  <div data-esito></div>
+</section>
 <section class="fondo-carta"><div class="wrap sez legenda">
   <div><b>Annulli gratis fino a 12 ore prima</b><span>Dopo, l'ingresso del carnet viene scalato.</span></div>
   <div><b>Validità</b><span>Carnet 5: due mesi. Carnet 10: quattro mesi. Il mensile si rinnova ogni mese e si disdice quando vuoi.</span></div>
@@ -108,7 +113,10 @@
   </a>
   <button class="pop-app__x" type="button" aria-label="Chiudi">✕</button>
 </aside>
-<script src="assets/js/qrcode.min.js?v=3" defer></script>
-<script src="assets/js/sito.js?v=3" defer></script>
+<script src="assets/js/qrcode.min.js?v=4" defer></script>
+<script src="app/dati.js?v=4" defer></script>
+<script src="app/app.js?v=4" defer></script>
+<script src="assets/js/sito.js?v=4" defer></script>
+<script src="assets/js/vivo.js?v=4" defer></script>
 </body>
 </html>

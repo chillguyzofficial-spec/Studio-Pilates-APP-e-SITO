@@ -323,8 +323,7 @@
 .profilo{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,5vw,80px);align-items:start}
 @media (max-width:900px){.profilo{grid-template-columns:1fr}}
 section[id]{scroll-margin-top:80px}
-.profilo .r45{position:sticky;top:96px}
-@media (max-width:900px){.profilo .r45{position:static;max-width:520px}}
+@media (max-width:900px){.profilo .r45{max-width:520px}}
 .profilo__testo{display:flex;flex-direction:column;gap:18px}
 .profilo__dal{margin:-8px 0 0;color:var(--testo-3);font-size:16px}
 .profilo__frase{margin:0;padding-left:20px;border-left:3px solid var(--barolo);font-family:var(--serif);font-size:clamp(24px,2.4vw,30px);line-height:1.25}
@@ -348,3 +347,55 @@ section[id]{scroll-margin-top:80px}
 .footer .social{color:var(--lino)}
 .footer__piccolo{font-size:14px;color:#B8AC98}
 .footer__col div a{color:var(--lino)}
+/* galleria dello studio: griglia ferma, foto intere */
+.galleria{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.galleria figure{margin:0}
+@media (max-width:700px){.galleria{grid-template-columns:1fr}}
+
+/* ===== parti dinamiche ===== */
+/* home: oggi in studio */
+.oggi-studio{display:flex;flex-direction:column;gap:12px;padding-bottom:clamp(32px,5vw,64px)}
+.oggi__testa{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px 16px}
+.oggi__righe{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:10px}
+.oggi__riga{display:grid;grid-template-columns:64px 1fr;grid-template-areas:"o c" "o e";gap:2px 12px;align-items:center;padding:14px 16px;border-radius:18px;background:var(--carta);color:var(--inchiostro);text-decoration:none;border:1.5px solid transparent;transition:border-color .2s}
+.oggi__riga:hover{border-color:var(--barolo)}
+.oggi__riga b{grid-area:o;font-family:var(--serif);font-weight:400;font-size:28px}
+.oggi__riga span{grid-area:c;display:flex;flex-direction:column}
+.oggi__riga strong{font-size:16px;font-weight:600}
+.oggi__riga small{font-size:14px;color:var(--testo-3)}
+.oggi__riga em{grid-area:e;font-style:normal;font-size:14px;font-weight:600;color:var(--testo-2)}
+.oggi__riga.pochi em,.oggi__riga.tua em{color:var(--barolo)}
+.oggi__riga.piena em,.oggi__riga.grigio em{color:var(--testo-3)}
+.oggi__riga.tua{border-color:var(--barolo)}
+/* lezioni: quale lezione fa per te */
+.trova-sez{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(24px,4vw,64px);align-items:start}
+.trova{background:var(--lino);border-radius:24px;padding:clamp(20px,3vw,32px);display:flex;flex-direction:column;gap:16px;min-height:280px}
+.trova h3{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(26px,2.6vw,34px);line-height:1.1;outline:none}
+.trova__passi{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.trova__passi i{height:4px;border-radius:2px;background:var(--riga)}
+.trova__passi i.on{background:var(--barolo)}
+.trova__scelte{display:flex;flex-direction:column;gap:8px}
+.trova__scelte button{min-height:56px;padding:0 20px;border-radius:18px;border:1.5px solid var(--riga);background:var(--carta);text-align:left;font-size:17px;font-weight:600;color:var(--inchiostro);cursor:pointer}
+.trova__scelte button:hover{border-color:var(--barolo)}
+.trova__ind{align-self:flex-start;min-height:44px;border:0;background:none;color:var(--barolo);font-size:16px;font-weight:500;cursor:pointer;padding:0}
+.trova__esito{display:flex;flex-direction:column;gap:12px}
+.trova__esito p{margin:0;color:var(--testo-2)}
+.trova__esito .btn{align-self:flex-start}
+.trova__chi{font-weight:600;color:var(--inchiostro)!important}
+.trova__nota{font-size:16px}
+/* prezzi: quale formula ti conviene */
+.conviene{display:flex;flex-direction:column;gap:20px}
+.conv__scelte{display:flex;flex-wrap:wrap;gap:10px}
+.conv__scelte button{min-width:88px;min-height:64px;padding:8px 18px;border-radius:18px;border:1.5px solid var(--riga);background:var(--carta);font-family:var(--serif);font-size:30px;line-height:1;color:var(--inchiostro);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.conv__scelte button small{font-family:var(--sans);font-size:14px;color:var(--testo-3)}
+.conv__scelte button[aria-pressed="true"]{background:var(--barolo);border-color:var(--barolo);color:var(--carta)}
+.conv__scelte button[aria-pressed="true"] small{color:#F0E4DF}
+.conv__frase{margin:0 0 6px;font-size:clamp(17px,1.4vw,20px);color:var(--testo-2)}
+.conv__barre{display:flex;flex-direction:column;gap:10px;max-width:760px}
+.conv__riga{display:grid;grid-template-columns:100px 1fr 76px;gap:12px;align-items:center;font-size:16px}
+.conv__riga i{height:14px;border-radius:7px;background:var(--sabbia);overflow:hidden}
+.conv__riga s{display:block;height:100%;border-radius:7px;background:#B8AC98;transition:width .3s}
+.conv__riga.best s{background:var(--barolo)}
+.conv__riga.best span,.conv__riga.best b{color:var(--barolo);font-weight:600}
+.conv__riga b{text-align:right}
+@media (prefers-reduced-motion:reduce){.conv__riga s{transition:none}}

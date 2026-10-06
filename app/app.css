@@ -188,9 +188,11 @@ body.app{background:var(--sabbia);min-height:100svh}
 .scelta .dx span{font-size:12px}
 
 /* barra in basso */
-.nav{position:sticky;bottom:0;z-index:10;background:var(--carta);border-top:1px solid var(--riga);display:grid;grid-template-columns:repeat(5,1fr);padding:0 0 env(safe-area-inset-bottom)}
-.nav a{min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:500;color:var(--testo-3);text-decoration:none;position:relative}
-.nav a::before{content:'';width:20px;height:3px;border-radius:2px;background:transparent}
+/* menu in alto (scelta di Francesco): resta fermo in cima mentre si scorre */
+.nav{position:sticky;top:0;order:-1;z-index:10;background:var(--carta);border-bottom:1px solid var(--riga);display:grid;grid-template-columns:repeat(5,1fr);padding:env(safe-area-inset-top) 0 0}
+.app__col:has(> .nav) .vista{padding-top:16px}
+.nav a{min-height:60px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:500;color:var(--testo-3);text-decoration:none;position:relative}
+.nav a::before{content:'';width:20px;height:3px;border-radius:2px;background:transparent;order:2}
 .nav a[aria-current="page"]{color:var(--barolo)}
 .nav a[aria-current="page"]::before{background:var(--barolo)}
 .nav .num{position:absolute;top:8px;left:calc(50% + 14px);min-width:18px;height:18px;border-radius:9px;background:var(--barolo);color:var(--carta);font-size:12px;line-height:18px;text-align:center;padding:0 4px}
@@ -206,7 +208,7 @@ body.app{background:var(--sabbia);min-height:100svh}
 @media (prefers-reduced-motion:reduce){.velo,.foglio{animation:none}}
 
 /* avviso breve */
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 84px);z-index:60;max-width:min(440px,calc(100vw - 32px));background:var(--inchiostro);color:var(--carta);border-radius:16px;padding:14px 18px;font-size:16px;line-height:1.4;box-shadow:0 16px 40px -16px rgba(0,0,0,.4)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 24px);z-index:60;max-width:min(440px,calc(100vw - 32px));background:var(--inchiostro);color:var(--carta);border-radius:16px;padding:14px 18px;font-size:16px;line-height:1.4;box-shadow:0 16px 40px -16px rgba(0,0,0,.4)}
 
 /* progressi: quadrante a cento tacche col numero di lezioni al centro */
 .progressi{flex-direction:row;align-items:center;gap:16px}

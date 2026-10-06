@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const SITO = 'https://chillguyzofficial-spec.github.io/Studio-Pilates-APP-e-SITO/'; // indirizzo pubblico (anteprime di condivisione)
-const V = '3'; // cache-busting di css/js: alzarlo a ogni pubblicazione
+const V = '4'; // cache-busting di css/js: alzarlo a ogni pubblicazione
 const DATI = require('../app/dati.js'); // orario, lezioni e istruttori: gli stessi dell'app
 const GBREVI = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
 const GNOMI = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
@@ -238,7 +238,10 @@ ${corpo}
   <button class="pop-app__x" type="button" aria-label="Chiudi">✕</button>
 </aside>
 <script src="assets/js/qrcode.min.js?v=${V}" defer></script>
+<script src="app/dati.js?v=${V}" defer></script>
+<script src="app/app.js?v=${V}" defer></script>
 <script src="assets/js/sito.js?v=${V}" defer></script>
+<script src="assets/js/vivo.js?v=${V}" defer></script>
 </body>
 </html>
 `;
@@ -267,6 +270,7 @@ PAGINE['index.html'] = pagina('index.html', 'Cento Respiri · Pilates reformer a
     </div>
   </div>
 </section>
+<section class="wrap oggi-studio" data-oggi-studio aria-live="polite" hidden></section>
 
 <section class="fondo-carta" id="metodo">
   <div class="wrap sez metodo">
@@ -328,6 +332,7 @@ ${RECENSIONI.map(([t, chi]) => `    <figure class="rec"><div class="rec__stelle"
 PAGINE['lezioni.html'] = pagina('lezioni.html', 'Lezioni · Cento Respiri', 'Le lezioni di pilates reformer di Cento Respiri a Torino: Base, Intermedio, Avanzato, Prenatale, Tower e lezioni private.', `
 ${testaPagina('Le lezioni', 'Cinque lezioni, un lettino a testa', '50 minuti, al massimo sei persone, sempre su prenotazione. Il lettino lo scegli tu.')}
 <section class="wrap"><div class="r-vera" style="aspect-ratio:16/9;border-radius:24px">${foto('lezioni-alto', '(max-width:1376px) 100vw, 1344px', '', true)}</div></section>
+<section class="fondo-carta"><div class="wrap sez trova-sez"><div class="testa"><div class="eti">Non sai da dove partire?</div><h2 class="h2">Quale lezione fa per te?</h2><p class="p2">Tre domande, un tocco ciascuna.</p></div><div class="trova" data-trova aria-live="polite"></div></div></section>
 <section class="wrap sez lez-schede">
 ${Object.entries(DATI.TIPI).map(([k, t]) => {
   const chi = [...new Set(Object.values(DATI.SCHEMA).flat().filter(r => r[1] === k).map(r => r[2]))];
@@ -408,6 +413,11 @@ ${PREZZI.map(p => `    <div class="prezzo"><h2>${p.name}</h2><div class="cifra">
     </div>
   </div>
 </section>
+<section class="wrap sez conviene" data-conviene aria-live="polite" style="padding-top:0">
+  <div class="testa"><div class="eti">Fai due conti</div><h2 class="h2">Quale formula ti conviene?</h2><p class="p2">Quante volte a settimana pensi di venire?</p></div>
+  <div class="conv__scelte" role="group" aria-label="Lezioni a settimana"><button type="button" data-volte="1" aria-pressed="false">1<small>volta</small></button><button type="button" data-volte="2" aria-pressed="false">2<small>volte</small></button><button type="button" data-volte="3" aria-pressed="false">3<small>volte</small></button><button type="button" data-volte="4" aria-pressed="false">4<small>volte</small></button></div>
+  <div data-esito></div>
+</section>
 <section class="fondo-carta"><div class="wrap sez legenda">
   <div><b>Annulli gratis fino a 12 ore prima</b><span>Dopo, l'ingresso del carnet viene scalato.</span></div>
   <div><b>Validità</b><span>Carnet 5: due mesi. Carnet 10: quattro mesi. Il mensile si rinnova ogni mese e si disdice quando vuoi.</span></div>
@@ -438,15 +448,9 @@ PAGINE['studio.html'] = pagina('studio.html', 'Lo studio · Cento Respiri', 'Lo 
 ${testaPagina('Lo studio', 'Una sola sala, a piano terra', 'Una vetrina in legno in una via tranquilla di San Salvario. Sei reformer, una Tower, finestre alte e luce naturale. Spogliatoio con doccia, armadietti, calze antiscivolo per chi le dimentica.')}
 <section class="wrap"><div class="studio__foto">${foto('sito-studio', '(max-width:1376px) 100vw, 1344px', '', true)}</div></section>
 <section class="wrap sez" style="padding-bottom:clamp(40px,6vw,80px)">
-  <div class="striscia" data-striscia>
-    <div class="striscia__track" tabindex="0" aria-label="Foto dello studio">
-${STRISCIA.map(id => `      <figure class="striscia__item">${foto(id, '(max-width:700px) 86vw, 640px')}</figure>`).join('\n')}
-    </div>
-    <div class="striscia__ctrl">
-      <button type="button" data-dir="-1" aria-label="Foto precedente">‹</button>
-      <span data-conta>1 / ${STRISCIA.length}</span>
-      <button type="button" data-dir="1" aria-label="Foto successiva">›</button>
-    </div>
+  <!-- griglia ferma (niente scorrimento laterale: su telefono non può "bloccare" la pagina) -->
+  <div class="galleria" aria-label="Foto dello studio">
+${STRISCIA.map(id => `    <figure class="r-vera" style="aspect-ratio:3/2">${foto(id, '(max-width:700px) 100vw, 660px')}</figure>`).join('\n')}
   </div>
 </section>
 <section class="wrap sez servizi" aria-labelledby="t-servizi" style="padding-top:0">
