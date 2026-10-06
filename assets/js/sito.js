@@ -116,7 +116,9 @@ document.querySelectorAll('[data-battiti]').forEach(box => {
   if (document.querySelector('.orario__riga')) { agg(); setInterval(agg, 60e3); }
 })();
 
-// popup "Scarica l'app": dopo l'apertura, chiudibile (non torna per 7 giorni), mai con il menu aperto o con l'app già installata
+// popup "Scarica l'app": dopo l'apertura, chiudibile (non torna per 7 giorni), mai con il menu aperto o con l'app già installata.
+// Niente lavoro durante lo scorrimento: un IntersectionObserver avvisa quando si supera l'apertura, e il popup
+// compare cambiando solo opacità e posizione (classe .su), così il browser non rifà l'impaginazione della pagina.
 (() => {
   const pop = document.getElementById('pop-app');
   if (!pop || matchMedia('(display-mode: standalone)').matches || navigator.standalone) return;
@@ -124,20 +126,23 @@ document.querySelectorAll('[data-battiti]').forEach(box => {
   try { if (Date.now() - (+localStorage.getItem(KEY) || 0) < SETTE) return; } catch (e) { /* niente memoria: si mostra */ }
   const qr = pop.querySelector('.pop-app__qr');
   if (qr && window.qrcode) { try { const q = qrcode(0, 'M'); q.addData(new URL('app/', location.href).href); q.make(); qr.innerHTML = q.createSvgTag({ cellSize: 6, margin: 1, scalable: true }); } catch (e) { /* niente */ } }
-  const menu = document.getElementById('menu-tel'), apertura = document.querySelector('.apertura');
-  let chiuso = false;
+  const menu = document.getElementById('menu-tel');
+  let oltre = false, menuAperto = false, visibile = null;
   const aggiorna = () => {
-    if (chiuso) return;
-    const oltre = apertura ? apertura.getBoundingClientRect().bottom < 0 : scrollY > 400;
-    pop.hidden = !oltre || (menu && !menu.hidden);
+    const v = oltre && !menuAperto;
+    if (v === visibile) return; // cambia stato solo quando serve
+    visibile = v; pop.classList.toggle('su', v); pop.setAttribute('aria-hidden', String(!v)); pop.inert = !v;
   };
+  pop.hidden = false; aggiorna(); // pronto ma invisibile
+  // sentinella: l'apertura, o una riga invisibile a 400 px nelle pagine senza apertura
+  let sentinella = document.querySelector('.apertura');
+  if (!sentinella) { sentinella = document.createElement('div'); sentinella.style.cssText = 'position:absolute;top:400px;left:0;width:1px;height:1px;pointer-events:none'; sentinella.setAttribute('aria-hidden', 'true'); document.body.appendChild(sentinella); }
+  if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { oltre = !e.isIntersecting && e.boundingClientRect.top < 0; aggiorna(); }).observe(sentinella);
+  if (menu) new MutationObserver(() => { menuAperto = !menu.hidden; aggiorna(); }).observe(menu, { attributes: true, attributeFilter: ['hidden'] });
   pop.querySelector('.pop-app__x').addEventListener('click', () => {
-    chiuso = true; pop.hidden = true;
+    pop.hidden = true;
     try { localStorage.setItem(KEY, String(Date.now())); } catch (e) { /* niente */ }
   });
-  addEventListener('scroll', () => requestAnimationFrame(aggiorna), { passive: true });
-  if (menu) new MutationObserver(aggiorna).observe(menu, { attributes: true, attributeFilter: ['hidden'] });
-  aggiorna();
 })();
 
 // regala una lezione: scelta, dedica, biglietto con codice (salvato su questo dispositivo per poterlo usare nell'app)
@@ -172,7 +177,19 @@ document.querySelectorAll('[data-regala]').forEach(box => {
 // Su telefono non si trascina col dito e nessuna rotella la cattura: non può "bloccare" lo scorrimento della pagina.
 (() => {
   const box = document.getElementById('mappa-vera');
-  if (!box || !window.L) return; // senza Leaflet (o senza rete) resta la mappa illustrata
+  if (!box) return;
+  // Leaflet si scarica solo quando la mappa sta per entrare nello schermo: la pagina si apre più leggera
+  const carica = () => {
+    const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css'; css.crossOrigin = 'anonymous'; document.head.appendChild(css);
+    const js = document.createElement('script'); js.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js'; js.crossOrigin = 'anonymous'; js.onload = avvia; document.head.appendChild(js); // senza rete resta la mappa illustrata
+  };
+  // si carica quando il telefono è libero (dopo l'apertura, non mentre si scorre); se arrivi prima alla mappa, subito
+  let fatto = false;
+  const una = () => { if (!fatto) { fatto = true; carica(); } };
+  const libero = window.requestIdleCallback || (f => setTimeout(f, 1200));
+  addEventListener('load', () => libero(una, { timeout: 4000 }), { once: true });
+  if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { io.disconnect(); una(); } }, { rootMargin: '300px 0px' }); io.observe(box); }
+  function avvia() {
   const L = window.L, tocco = matchMedia('(pointer: coarse)').matches;
   box.innerHTML = '';
   box.classList.add('mappa--vera');
@@ -190,4 +207,5 @@ document.querySelectorAll('[data-regala]').forEach(box => {
   punto(PORTA_NUOVA, 'FS', 'Stazione Porta Nuova · 10 minuti');
   mappa.fitBounds(L.latLngBounds([NIZZA, PORTA_NUOVA, ZONA]).pad(0.25));
   if (tocco) box.insertAdjacentHTML('beforeend', '<p class="mappa__aiuto">Usa + e − per lo zoom</p>');
+  }
 })();

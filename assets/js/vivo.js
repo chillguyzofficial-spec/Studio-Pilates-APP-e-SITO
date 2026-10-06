@@ -103,7 +103,11 @@ if (trova) {
   disegnaTrova();
 }
 
-// ---------- prezzi: quale formula ti conviene ----------
+})();
+
+// ---------- prezzi: quale formula ti conviene (non usa il motore dell'app, che in Prezzi non si carica) ----------
+(() => {
+'use strict';
 const conv = document.querySelector('[data-conviene]');
 function disegnaConv(volte) {
   const mese = Math.round(volte * 4.33);

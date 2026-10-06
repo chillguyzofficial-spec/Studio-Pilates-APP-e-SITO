@@ -19,7 +19,7 @@ const stato = p => p.evaluate(() => JSON.parse(localStorage.getItem('cr-demo-1')
   ok(await p.getAttribute('.pop-app__testo', 'href') === 'app/', 'popup: porta all\'app');
   ok(await p.evaluate(() => { const r = document.getElementById('pop-app').getBoundingClientRect(); return r.left >= 0 && r.right <= innerWidth && r.bottom <= innerHeight; }), 'popup: dentro lo schermo, in basso a sinistra');
   if (SHOT) await p.screenshot({ path: SHOT + '/f-popup.png' });
-  await p.click('.menu-btn'); await p.waitForTimeout(200);
+  await p.click('.menu-btn'); await p.waitForTimeout(450);
   ok(await p.isHidden('#pop-app'), 'popup: sparisce con il menu aperto');
   await p.click('.menu-btn'); await p.waitForTimeout(200);
   await p.click('.pop-app__x'); await p.waitForTimeout(100);
