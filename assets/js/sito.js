@@ -167,3 +167,27 @@ document.querySelectorAll('[data-regala]').forEach(box => {
     out.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
   });
 });
+
+// mappa vera dello studio (pagina "Lo studio"): OpenStreetMap con Leaflet.
+// Su telefono non si trascina col dito e nessuna rotella la cattura: non può "bloccare" lo scorrimento della pagina.
+(() => {
+  const box = document.getElementById('mappa-vera');
+  if (!box || !window.L) return; // senza Leaflet (o senza rete) resta la mappa illustrata
+  const L = window.L, tocco = matchMedia('(pointer: coarse)').matches;
+  box.innerHTML = '';
+  box.classList.add('mappa--vera');
+  const ZONA = [45.0553, 7.6788];          // San Salvario, tra metro Nizza e Largo Saluzzo
+  const NIZZA = [45.05173, 7.674766];      // stazione metro Nizza (Wikipedia)
+  const PORTA_NUOVA = [45.0622, 7.6786];   // stazione di Torino Porta Nuova
+  const mappa = L.map(box, { center: ZONA, zoom: 15, scrollWheelZoom: false, dragging: !tocco, tap: false, zoomControl: true, attributionControl: false });
+  L.control.attribution({ prefix: '<a href="https://leafletjs.com">Leaflet</a>' }).addTo(mappa);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(mappa);
+  L.circle(ZONA, { radius: 260, color: '#6A2C2E', weight: 2, fillColor: '#6A2C2E', fillOpacity: .18 }).addTo(mappa)
+    .bindTooltip('<b>Cento Respiri</b><br>zona San Salvario', { permanent: true, direction: 'top', className: 'mappa__etichetta', offset: [0, -8] });
+  const punto = (pos, lettera, nome) => L.marker(pos, { icon: L.divIcon({ className: 'mappa__punto', html: `<span>${lettera}</span>`, iconSize: [30, 30], iconAnchor: [15, 15] }), keyboard: false, title: nome })
+    .addTo(mappa).bindTooltip(nome, { direction: 'right', offset: [14, 0], className: 'mappa__nome' });
+  punto(NIZZA, 'M', 'Metro Nizza · 5 minuti a piedi');
+  punto(PORTA_NUOVA, 'FS', 'Stazione Porta Nuova · 10 minuti');
+  mappa.fitBounds(L.latLngBounds([NIZZA, PORTA_NUOVA, ZONA]).pad(0.25));
+  if (tocco) box.insertAdjacentHTML('beforeend', '<p class="mappa__aiuto">Usa + e − per lo zoom</p>');
+})();

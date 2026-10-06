@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const SITO = 'https://chillguyzofficial-spec.github.io/Studio-Pilates-APP-e-SITO/'; // indirizzo pubblico (anteprime di condivisione)
-const V = '6'; // cache-busting di css/js: alzarlo a ogni pubblicazione
+const V = '7'; // cache-busting di css/js: alzarlo a ogni pubblicazione
 const DATI = require('../app/dati.js'); // orario, lezioni e istruttori: gli stessi dell'app
 const GBREVI = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
 const GNOMI = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
@@ -463,7 +463,13 @@ ${STRISCIA.map(id => `    <figure class="r-vera" style="aspect-ratio:3/2">${foto
 </section>
 <section class="fondo-carta" id="dove">
   <div class="wrap sez dove">
-    <div class="mappa">${MAPPA}</div>
+    <div class="mappa-blocco">
+      <!-- mappa vera (OpenStreetMap + Leaflet); finché non si carica, o senza rete, resta la mappa illustrata -->
+      <div class="mappa" id="mappa-vera" role="region" aria-label="Mappa di San Salvario con la zona dello studio, la metro Nizza e la stazione di Porta Nuova">${MAPPA}</div>
+      <div class="mappa__sotto"><span>Posizione indicativa: lo studio è di fantasia, la zona è vera.</span><a class="link-freccia" href="https://www.google.com/maps/dir/?api=1&amp;destination=Metro%20Nizza%2C%20Torino" target="_blank" rel="noopener">Indicazioni per la metro Nizza ›</a></div>
+    </div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" crossorigin="anonymous" defer></script>
     <div class="dove__info">
       <div class="testa"><div class="eti">Dove siamo</div><h2 class="h2">Via delle Filande 7, Torino</h2><p class="p2">San Salvario, ingresso su strada. Metro Nizza a 5 minuti a piedi, Porta Nuova a 10. Biciclette nel cortile.</p></div>
       <div class="eti eti--grigia" style="margin-bottom:-16px">Orari</div>

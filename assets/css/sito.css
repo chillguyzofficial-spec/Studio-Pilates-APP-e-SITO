@@ -95,7 +95,7 @@
 /* dove siamo */
 .dove{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,80px)}
 .mappa{aspect-ratio:3/2;border-radius:24px;overflow:hidden;background:#EAE2D4}
-.mappa svg{display:block;width:100%;height:100%}
+.mappa > svg{display:block;width:100%;height:100%} /* solo la mappa illustrata: non toccare gli svg di Leaflet */
 .dove__info{display:flex;flex-direction:column;gap:24px}
 .orari{display:flex;flex-direction:column;margin:0}
 .orari div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-top:1px solid var(--riga)}
@@ -399,3 +399,19 @@ section[id]{scroll-margin-top:80px}
 .conv__riga.best span,.conv__riga.best b{color:var(--barolo);font-weight:600}
 .conv__riga b{text-align:right}
 @media (prefers-reduced-motion:reduce){.conv__riga s{transition:none}}
+
+/* mappa vera: toni caldi come il sito, etichette nello stile del marchio */
+.mappa-blocco{display:flex;flex-direction:column;gap:10px}
+.mappa--vera{position:relative;z-index:0;background:#EAE2D4}
+.mappa--vera .leaflet-tile{filter:grayscale(.55) sepia(.2) contrast(.95) brightness(1.03)}
+.mappa--vera .leaflet-control-zoom a{width:40px;height:40px;line-height:38px;font-size:20px;color:var(--inchiostro)}
+.mappa__etichetta{background:var(--carta);border:0;border-radius:10px;box-shadow:0 6px 18px -8px rgba(43,38,32,.4);font-family:var(--sans);font-size:14px;color:var(--inchiostro);padding:6px 10px;text-align:center}
+.mappa__etichetta b{font-family:var(--serif);font-weight:400;font-size:16px}
+.mappa__nome{font-family:var(--sans);font-size:14px;border-radius:8px}
+.mappa__punto span{display:flex;width:30px;height:30px;border-radius:50%;background:var(--inchiostro);color:var(--carta);align-items:center;justify-content:center;font:700 12px/1 var(--sans);box-shadow:0 0 0 3px var(--carta)}
+.mappa__aiuto{position:absolute;left:10px;bottom:6px;z-index:500;margin:0;font-size:12px;color:var(--testo-2);background:rgba(251,248,243,.9);padding:3px 8px;border-radius:8px;pointer-events:none}
+.mappa__sotto{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 16px;font-size:14px;color:var(--testo-3)}
+.mappa__sotto .link-freccia{font-size:16px}
+/* su telefono il dito sopra la mappa fa scorrere la pagina (Leaflet di suo blocca ogni gesto: touch-action:none) */
+@media (pointer:coarse){.mappa--vera.leaflet-container,.mappa--vera .leaflet-pane,.mappa--vera .leaflet-tile{touch-action:pan-x pan-y pinch-zoom!important}}
+@media (max-width:640px){.mappa.mappa--vera{aspect-ratio:1/1}}

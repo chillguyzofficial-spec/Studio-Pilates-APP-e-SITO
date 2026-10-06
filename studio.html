@@ -11,8 +11,8 @@
 <link rel="apple-touch-icon" href="assets/icone/icona-180.png">
 <link rel="preload" href="assets/fonts/gilda-display-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/css/base.css?v=6">
-<link rel="stylesheet" href="assets/css/sito.css?v=6">
+<link rel="stylesheet" href="assets/css/base.css?v=7">
+<link rel="stylesheet" href="assets/css/sito.css?v=7">
 <meta property="og:title" content="Lo studio · Cento Respiri">
 <meta property="og:description" content="Lo studio Cento Respiri a San Salvario, Torino: una sala con sei reformer e una Tower, come arrivare, orari e contatti.">
 <meta property="og:type" content="website">
@@ -78,7 +78,9 @@
 </section>
 <section class="fondo-carta" id="dove">
   <div class="wrap sez dove">
-    <div class="mappa"><svg viewBox="0 0 600 400" role="img" aria-label="Mappa illustrata di San Salvario: lo studio in Via delle Filande 7, a 5 minuti dalla metro Nizza, tra la stazione di Porta Nuova e il Parco del Valentino">
+    <div class="mappa-blocco">
+      <!-- mappa vera (OpenStreetMap + Leaflet); finché non si carica, o senza rete, resta la mappa illustrata -->
+      <div class="mappa" id="mappa-vera" role="region" aria-label="Mappa di San Salvario con la zona dello studio, la metro Nizza e la stazione di Porta Nuova"><svg viewBox="0 0 600 400" role="img" aria-label="Mappa illustrata di San Salvario: lo studio in Via delle Filande 7, a 5 minuti dalla metro Nizza, tra la stazione di Porta Nuova e il Parco del Valentino">
 <rect width="600" height="400" fill="#EAE2D4"/>
 <path d="M455 0 C430 120 470 220 440 400 L600 400 L600 0Z" fill="#D9E0CF"/>
 <path d="M520 0 C500 120 545 230 515 400" stroke="#BFD0D6" stroke-width="26" fill="none"/>
@@ -101,6 +103,10 @@
 <text x="310" y="188" font-family="Gilda Display, serif" font-size="24" fill="#2B2620">Cento Respiri</text>
 <text x="310" y="216" font-family="Hanken Grotesk, sans-serif" font-size="18" fill="#6B6257">Via delle Filande 7</text>
 </svg></div>
+      <div class="mappa__sotto"><span>Posizione indicativa: lo studio è di fantasia, la zona è vera.</span><a class="link-freccia" href="https://www.google.com/maps/dir/?api=1&amp;destination=Metro%20Nizza%2C%20Torino" target="_blank" rel="noopener">Indicazioni per la metro Nizza ›</a></div>
+    </div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" crossorigin="anonymous" defer></script>
     <div class="dove__info">
       <div class="testa"><div class="eti">Dove siamo</div><h2 class="h2">Via delle Filande 7, Torino</h2><p class="p2">San Salvario, ingresso su strada. Metro Nizza a 5 minuti a piedi, Porta Nuova a 10. Biciclette nel cortile.</p></div>
       <div class="eti eti--grigia" style="margin-bottom:-16px">Orari</div>
@@ -146,10 +152,10 @@
   </a>
   <button class="pop-app__x" type="button" aria-label="Chiudi">✕</button>
 </aside>
-<script src="assets/js/qrcode.min.js?v=6" defer></script>
-<script src="app/dati.js?v=6" defer></script>
-<script src="app/app.js?v=6" defer></script>
-<script src="assets/js/sito.js?v=6" defer></script>
-<script src="assets/js/vivo.js?v=6" defer></script>
+<script src="assets/js/qrcode.min.js?v=7" defer></script>
+<script src="app/dati.js?v=7" defer></script>
+<script src="app/app.js?v=7" defer></script>
+<script src="assets/js/sito.js?v=7" defer></script>
+<script src="assets/js/vivo.js?v=7" defer></script>
 </body>
 </html>

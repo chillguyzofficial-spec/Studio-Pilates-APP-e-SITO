@@ -18,7 +18,7 @@ const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'lug
     const errs = [];
     p.on('pageerror', e => errs.push('JS ' + e.message));
     p.on('console', m => { if (m.type() === 'error') errs.push('console ' + m.text()); });
-    p.on('requestfailed', r => { if (!/favicon/.test(r.url())) errs.push('fallita ' + r.url()); });
+    p.on('requestfailed', r => { if (!/favicon|tile.openstreetmap/.test(r.url())) errs.push('fallita ' + r.url()); });
     p.on('response', r => { if (r.status() >= 400) errs.push('HTTP ' + r.status() + ' ' + r.url()); });
     const link = new Set();
     for (const pg of [...SITO, 'area/', 'app/', 'studio/']) {
@@ -207,6 +207,18 @@ const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'lug
     await q.goto(base); await q.evaluate(() => localStorage.clear()); await q.reload(); await q.waitForTimeout(500);
     ok(!/la tua lezione/.test(await q.textContent('body')), 'regressione: il visitatore non vede "la tua lezione"');
     await v.close();
+  }
+
+  // ---------- 4b) mappa dello studio: vera, e su telefono non blocca lo scorrimento ----------
+  for (const [nome, opt] of [['telefono', pw.devices['iPhone 13']], ['PC', { viewport: { width: 1440, height: 900 } }]]) {
+    const c = await b.newContext(opt), p = await c.newPage();
+    await p.goto(base + 'studio.html', { waitUntil: 'networkidle' }); await p.locator('#mappa-vera').scrollIntoViewIfNeeded(); await p.waitForTimeout(2000);
+    const m = await p.evaluate(() => ({ vera: !!document.querySelector('#mappa-vera.leaflet-container'), tile: [...document.querySelectorAll('#mappa-vera .leaflet-tile')].filter(i => i.complete && i.naturalWidth).length, punti: document.querySelectorAll('.mappa__punto').length, zona: !!document.querySelector('.mappa__etichetta'), touch: getComputedStyle(document.getElementById('mappa-vera')).touchAction, trascina: document.getElementById('mappa-vera').classList.contains('leaflet-touch-drag') }));
+    ok(m.vera && m.tile > 0, `${nome} mappa: mappa vera caricata (${m.tile} riquadri)`);
+    ok(m.punti === 2 && m.zona, `${nome} mappa: zona dello studio, metro Nizza e Porta Nuova`);
+    if (nome === 'telefono') ok(m.touch !== 'none' && !m.trascina, `telefono mappa: il dito fa scorrere la pagina (touch-action ${m.touch}, trascinamento spento)`);
+    ok(await p.locator('.mappa__sotto a[href*="google.com/maps"]').count() === 1, `${nome} mappa: pulsante indicazioni`);
+    await c.close();
   }
 
   // ---------- 5) accesso ----------
