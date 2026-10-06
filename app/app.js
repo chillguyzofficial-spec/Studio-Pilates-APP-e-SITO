@@ -211,8 +211,8 @@ function bannerApp() {
   return `<div class="scheda banner-app">
     <div class="qr-app" aria-hidden="true">${qrSvg(url)}</div>
     <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
-      <div class="eti">Scarica l'app</div>
-      <div class="t18b">Prenoti con un tocco, dal telefono</div>
+      <div class="eti">App per il telefono</div>
+      <div class="t18b">Prenoti con un tocco, anche dal telefono</div>
       <div class="t16">Avviso quando si libera un posto, QR per entrare in studio, funziona anche senza rete. Inquadra il codice col telefono e aggiungila alla schermata Home.</div>
       <div class="azioni" style="justify-content:flex-start;gap:0 16px"><a class="link" href="../app/" style="padding:0">Apri l'app</a><a class="link" href="../app/#installa" style="padding:0">Come si installa</a></div>
     </div>
@@ -452,7 +452,6 @@ V.oggi = () => {
   ${att.map(({ a, l }) => `<a class="voce" href="#lezione/${l.id}" style="font-weight:500"><div>${a.offerta ? '<b>Posto libero da confermare</b>' : `In lista d'attesa · ${a.pos}ª posizione`}<div class="t16" style="font-weight:400">${quando(l.inizio)} ${l.ora} · ${TIPI[l.tipo].nome}</div></div><span>›</span></a>`).join('')}
   ${cartaCarnet(false)}
   ${cartaProgressi()}
-  ${WEB ? bannerApp() : ''}
   <div class="giu"><a class="btn" href="#orario">Prenota una lezione</a></div>
 </main>${nav('oggi')}`;
 };

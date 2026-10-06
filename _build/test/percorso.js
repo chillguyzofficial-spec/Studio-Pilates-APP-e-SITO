@@ -28,7 +28,7 @@ const stato = p => p.evaluate(() => JSON.parse(localStorage.getItem('cr-demo-1')
   ok(await p.evaluate(() => document.querySelector('h1').getBoundingClientRect().top < innerHeight), 'sito: titolo nel primo schermo');
   ok(await p.evaluate(() => document.querySelector('.apertura .btn').getBoundingClientRect().bottom <= innerHeight), 'sito: pulsante nel primo schermo');
   if (SHOT) await p.screenshot({ path: SHOT + '/sito-tel.png', fullPage: true });
-  await p.locator('.striscia').scrollIntoViewIfNeeded(); await p.click('[data-dir="1"]'); await p.waitForTimeout(800);
+  await p.goto(base + 'studio.html'); await p.waitForTimeout(300); await p.locator('.striscia').scrollIntoViewIfNeeded(); await p.click('[data-dir="1"]'); await p.waitForTimeout(800);
   ok((await p.textContent('[data-conta]')).startsWith('2'), 'sito: striscia avanti → 2 / 4');
 
   // --- app: benvenuto ed entrata

@@ -259,3 +259,92 @@
   .biglietto__carta,.biglietto__carta *{visibility:visible}
   .biglietto__carta{position:fixed;left:0;top:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+
+/* ===== sito a più pagine ===== */
+/* pagina attiva nel menu */
+.header nav a[aria-current="page"]{color:var(--barolo)}
+.header nav a.solo-pc[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:8px;height:2px;border-radius:1px;background:var(--barolo)}
+.menu-tel nav a[aria-current="page"]{color:var(--barolo)}
+/* intestazione delle pagine interne */
+.pagina-testa{padding-top:clamp(32px,6vw,80px);padding-bottom:clamp(24px,4vw,48px);display:flex;flex-direction:column;gap:14px;max-width:980px;margin-left:0}
+.pagina-testa h1{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(40px,6vw,80px);line-height:1.02;text-wrap:balance}
+.pagina-testa .p-grande{max-width:720px}
+@media (min-width:1376px){.pagina-testa{margin-left:auto;margin-right:auto;max-width:1376px}}
+/* home: tre strade */
+.vie{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.via{position:relative;display:flex;flex-direction:column;gap:8px;padding:28px 56px 28px 28px;border-radius:24px;background:var(--carta);color:var(--inchiostro);text-decoration:none;border:1.5px solid transparent;transition:border-color .2s}
+.via:hover{border-color:var(--barolo)}
+.via b{font-family:var(--serif);font-weight:400;font-size:28px;line-height:1.1}
+.via span:not(.eti){color:var(--testo-2);font-size:16px}
+.via i{position:absolute;right:24px;top:50%;transform:translateY(-50%);font-style:normal;font-size:28px;color:var(--barolo)}
+/* recensioni */
+.recensioni{display:flex;flex-direction:column;gap:clamp(24px,3vw,40px)}
+.rec__nota{font-size:14px!important;color:var(--testo-3)!important;margin:0}
+.rec__griglia{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.rec{margin:0;background:var(--carta);border-radius:24px;padding:28px;display:flex;flex-direction:column;gap:14px}
+.rec__stelle{color:var(--barolo);letter-spacing:.2em;font-size:16px}
+.rec blockquote{margin:0;font-family:var(--serif);font-size:22px;line-height:1.35}
+.rec figcaption{font-size:16px;color:var(--testo-3)}
+/* home: assaggio dei prezzi */
+.assaggio{display:flex;flex-direction:column;gap:clamp(20px,3vw,32px)}
+.assaggio__lista{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px}
+.assaggio__lista li{background:var(--carta);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:4px}
+.assaggio__lista b{font-family:var(--serif);font-weight:400;font-size:40px;line-height:1}
+.assaggio__lista span{color:var(--testo-2);font-size:16px}
+.assaggio__link{display:flex;flex-wrap:wrap;gap:8px 32px}
+/* lezioni: una scheda per lezione */
+.lez-schede{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:16px}
+.lez-scheda{background:var(--carta);border-radius:24px;padding:clamp(22px,3vw,32px);display:flex;flex-direction:column;gap:16px;scroll-margin-top:90px}
+.lez-scheda__testa{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px 16px}
+.lez-scheda h2{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(28px,3vw,36px);line-height:1.1}
+.lez-scheda .liv{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-3)}
+.lez-scheda dl{margin:0;display:flex;flex-direction:column}
+.lez-scheda dl>div{display:grid;grid-template-columns:110px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--sabbia)}
+.lez-scheda dt{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-3);padding-top:4px}
+.lez-scheda dd{margin:0;color:var(--testo-2)}
+@media (max-width:480px){.lez-scheda dl>div{grid-template-columns:1fr;gap:4px}}
+.sett{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.sett li{display:grid;grid-template-columns:100px 1fr;gap:10px}
+.sett b{font-weight:600;color:var(--inchiostro)}
+.privata-pag{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(28px,4vw,64px);align-items:center}
+.privata-pag .testa{gap:16px}
+.r32{aspect-ratio:3/2;border-radius:24px;overflow:hidden}
+.r-vera{border-radius:20px;overflow:hidden}
+/* righe informative (orario, prezzi) */
+.legenda{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px 40px}
+.legenda>div{display:flex;flex-direction:column;gap:6px;border-top:2px solid var(--barolo);padding-top:16px}
+.legenda b{font-size:18px}
+.legenda span{color:var(--testo-2)}
+.prezzo h2{margin:0;font-size:18px;font-weight:600}
+/* istruttori */
+.salta{display:flex;flex-wrap:wrap;gap:8px;padding-bottom:16px}
+.salta a{min-height:44px;padding:0 18px;border-radius:22px;border:1.5px solid var(--riga);display:flex;align-items:center;color:var(--inchiostro);text-decoration:none;font-weight:500}
+.salta a:hover{border-color:var(--barolo);color:var(--barolo)}
+.profilo{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(28px,5vw,80px);align-items:start}
+@media (max-width:900px){.profilo{grid-template-columns:1fr}}
+section[id]{scroll-margin-top:80px}
+.profilo .r45{position:sticky;top:96px}
+@media (max-width:900px){.profilo .r45{position:static;max-width:520px}}
+.profilo__testo{display:flex;flex-direction:column;gap:18px}
+.profilo__dal{margin:-8px 0 0;color:var(--testo-3);font-size:16px}
+.profilo__frase{margin:0;padding-left:20px;border-left:3px solid var(--barolo);font-family:var(--serif);font-size:clamp(24px,2.4vw,30px);line-height:1.25}
+.profilo h3{margin:0 0 8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--barolo);font-weight:600}
+.profilo ul:not(.sett){margin:0;padding-left:18px;color:var(--testo-2);display:flex;flex-direction:column;gap:4px}
+.profilo__griglia{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:20px 32px}
+/* lo studio: servizi, contatti, social */
+.servizi{display:flex;flex-direction:column;gap:clamp(24px,3vw,36px)}
+.servizi__griglia{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.servizi__griglia{grid-template-columns:1fr}}
+.servizi figure{margin:0;display:flex;flex-direction:column;gap:10px}
+.servizi figcaption{font-size:16px;color:var(--testo-2)}
+.contatti{display:flex;flex-wrap:wrap;gap:16px 40px}
+.contatti div{display:flex;flex-direction:column;gap:4px}
+.contatti b{font-size:18px;font-weight:600;overflow-wrap:anywhere}
+.seguici{display:flex;flex-direction:column;gap:20px}
+.seguici__lista{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px}
+.seguici__lista li{background:var(--carta);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:4px}
+.seguici__lista b{font-size:18px}
+.seguici__lista span{color:var(--testo-2);font-size:16px}
+.footer .social{color:var(--lino)}
+.footer__piccolo{font-size:14px;color:#B8AC98}
+.footer__col div a{color:var(--lino)}

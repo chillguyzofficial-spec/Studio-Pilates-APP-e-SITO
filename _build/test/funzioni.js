@@ -25,10 +25,11 @@ const stato = p => p.evaluate(() => JSON.parse(localStorage.getItem('cr-demo-1')
   await p.click('.pop-app__x'); await p.waitForTimeout(100);
   await p.reload(); await p.evaluate(() => scrollTo(0, 1400)); await p.waitForTimeout(300);
   ok(await p.isHidden('#pop-app'), 'popup: chiuso non ricompare');
-  ok(await p.locator('#prima .passi3 li').count() === 3, 'prima volta: 3 passi');
+  ok(await p.locator('.passi3 li').count() === 3, 'home: la prima volta in 3 passi');
+  await p.goto(base + 'prezzi.html'); await p.waitForTimeout(200);
   ok(await p.locator('.privata a[href="area/#privata"]').count() === 1, 'prezzi: lezione privata con link');
   // regalo
-  await p.locator('#regala').scrollIntoViewIfNeeded();
+  await p.goto(base + 'regala.html'); await p.waitForTimeout(300);
   await p.click('[data-regalo="carnet5"]'); await p.fill('#rg-per', 'Giulia'); await p.fill('#rg-da', 'Marco'); await p.fill('#rg-dedica', 'Per ricominciare');
   await p.click('[data-crea-regalo]'); await p.waitForTimeout(400);
   const codice = (await p.textContent('.biglietto__codice')).trim();

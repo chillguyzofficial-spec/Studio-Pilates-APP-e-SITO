@@ -29,7 +29,7 @@ const stato = p => p.evaluate(() => JSON.parse(localStorage.getItem('cr-demo-1')
   ok(await p.locator('.w-testa nav a').count() === 5, 'testata con 5 voci di menu');
   ok(await p.locator('.nav').count() === 0, 'nessuna barra in basso da telefono');
   ok(await p.evaluate(() => document.querySelector('main').getBoundingClientRect().width > 700), 'contenuto largo (non colonna da telefono)');
-  ok(await p.locator('main .banner-app').count() === 1, 'oggi: riquadro "Scarica l\'app"');
+  ok(await p.locator('main .banner-app').count() === 0, 'oggi: niente riquadro dell\'app (chi è già dentro non va disturbato)');
   if (SHOT) await p.screenshot({ path: SHOT + '/a-oggi.png', fullPage: true });
   // orario a griglia
   await p.click('.w-testa nav a[href="#orario"]'); await p.waitForTimeout(300);

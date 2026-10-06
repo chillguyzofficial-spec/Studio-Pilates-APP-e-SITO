@@ -17,7 +17,7 @@ const stato = p => p.evaluate(() => JSON.parse(localStorage.getItem('cr-demo-1')
 
   // --- sito: orario
   await p.goto(base); await p.evaluate(() => { localStorage.clear(); sessionStorage.clear(); });
-  await p.goto(base + '#orario'); await p.waitForTimeout(400);
+  await p.goto(base + 'orario.html'); await p.waitForTimeout(400);
   await lato('sito orario');
   const oggi = new Date().getDay() || 1;
   ok(await p.getAttribute(`#og-${oggi}`, 'aria-selected') === 'true', 'orario: aperto sul giorno di oggi');

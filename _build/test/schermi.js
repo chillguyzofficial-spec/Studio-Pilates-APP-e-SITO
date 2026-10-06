@@ -9,7 +9,7 @@ const SCHERMI = [
   ['Pixel 7', pw.devices['Pixel 7']], ['iPad vert.', pw.devices['iPad (gen 7)']], ['iPad orizz.', pw.devices['iPad (gen 7) landscape']],
   ['PC 1024', { viewport: { width: 1024, height: 700 } }], ['PC 1920', { viewport: { width: 1920, height: 1080 } }],
 ];
-const PAGINE = ['', 'area/#benvenuto', 'area/#oggi', 'area/#orario', 'area/#prenotazioni', 'area/#carnet', 'area/#profilo', 'app/#benvenuto', 'app/#oggi', 'app/#orario', 'app/#prenotazioni', 'app/#carnet', 'app/#profilo', 'app/#avvisi', 'app/#installa', 'app/#prova'];
+const PAGINE = ['', 'lezioni.html', 'orario.html', 'istruttori.html', 'prezzi.html', 'regala.html', 'studio.html', 'domande.html', 'area/#benvenuto', 'area/#oggi', 'area/#orario', 'area/#prenotazioni', 'area/#carnet', 'area/#profilo', 'app/#benvenuto', 'app/#oggi', 'app/#orario', 'app/#prenotazioni', 'app/#carnet', 'app/#profilo', 'app/#avvisi', 'app/#installa', 'app/#prova'];
 (async () => {
   const b = await pw.chromium.launch();
   for (const [nome, opt] of SCHERMI) {

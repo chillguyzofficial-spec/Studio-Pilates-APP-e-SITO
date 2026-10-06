@@ -18,7 +18,7 @@ const scorri = async p => { for (let y = 0; y < 12000; y += 600) { await p.evalu
   for (const [nome, opt] of [['iPhone 13', pw.devices['iPhone 13']], ['iPhone SE', pw.devices['iPhone SE']], ['PC 1440', { viewport: { width: 1440, height: 900 } }]]) {
     const c = await b.newContext(opt), p = await c.newPage(); p.on('pageerror', e => errs.push(e.message));
     const verifica = async (u, cosa) => { await p.goto(base + u); await p.waitForTimeout(300); await scorri(p); for (const [f, t] of await tagli(p)) ok(t <= 2, `${nome} ${cosa}: ${f} tagliata del ${t}%`); };
-    await verifica('', 'sito');
+    for (const pg of ['', 'lezioni.html', 'istruttori.html', 'studio.html']) await verifica(pg, 'sito ' + (pg || 'home'));
     await p.goto(base + 'app/#benvenuto'); await p.evaluate(() => localStorage.clear());
     await verifica('app/#benvenuto', 'app benvenuto');
     await verifica('app/#prova', 'app prova');
@@ -40,9 +40,10 @@ const scorri = async p => { for (let y = 0; y < 12000; y += 600) { await p.evalu
   ok(await p.evaluate(() => document.querySelector('.header').getBoundingClientRect().top === 0), 'testata ancora in cima con il menu aperto');
   ok(await p.evaluate(() => getComputedStyle(document.documentElement).overflow === 'hidden' && getComputedStyle(document.body).overflow !== 'hidden'), 'menu: scroll bloccato solo su html');
   if (SHOT) await p.screenshot({ path: SHOT + '/g-menu.png' });
-  await p.click('#menu-tel a[href="#prezzi"]'); await p.waitForTimeout(600);
-  ok(await p.isHidden('#menu-tel'), 'menu: si chiude toccando una voce');
-  ok(await p.evaluate(() => Math.abs(document.getElementById('prezzi').getBoundingClientRect().top) < 140), 'menu: porta alla sezione Prezzi');
+  await p.click('#menu-tel a[href="prezzi.html"]'); await p.waitForTimeout(600);
+  ok(p.url().endsWith('prezzi.html') && await p.isHidden('#menu-tel'), 'menu: porta alla pagina Prezzi');
+  ok(await p.getAttribute('#menu-tel a[href="prezzi.html"]', 'aria-current') === 'page', 'menu: pagina attiva evidenziata');
+  await p.goto(base); await p.waitForTimeout(300);
   // respira con noi
   await p.locator('[data-battiti]').scrollIntoViewIfNeeded();
   await p.click('.battiti__btn'); await p.waitForTimeout(1300);
@@ -55,6 +56,7 @@ const scorri = async p => { for (let y = 0; y < 12000; y += 600) { await p.evalu
   await p.click('.battiti__btn'); await p.waitForTimeout(200);
   ok(await p.locator('.battiti__barre span.fatto').count() === 0 && (await p.textContent('.battiti__btn')).startsWith('Respira'), 'respira: Ferma rimette tutto com\'era');
   // orario vivo (con l'ora finta del giorno: lezioni di oggi prima e dopo)
+  await p.goto(base + 'orario.html'); await p.waitForTimeout(300);
   const oggi = new Date().getDay();
   if (oggi !== 0) {
     const r = await p.evaluate(g => [...document.querySelectorAll(`.orario__riga[data-g="${g}"]`)].map(a => [a.dataset.ora, a.classList.contains('passata'), !!a.querySelector('.tra')]), oggi);
@@ -65,12 +67,11 @@ const scorri = async p => { for (let y = 0; y < 12000; y += 600) { await p.evalu
     const cols = await p.evaluate(g => getComputedStyle(document.querySelector(`.orario__riga[data-g="${g}"]`)).gridTemplateColumns.split(' ').length, oggi);
     ok(cols === 3, 'orario vivo: la riga resta a 3 colonne');
   }
-  // PC: sezione evidenziata
+  // PC: pagina attiva evidenziata nel menu
   const q = await b.newPage({ viewport: { width: 1440, height: 900 } });
-  await q.goto(base); await q.waitForTimeout(300);
+  await q.goto(base + 'prezzi.html'); await q.waitForTimeout(300);
   ok(await q.isHidden('.menu-btn'), 'PC: niente pulsante Menu');
-  await q.evaluate(() => document.getElementById('prezzi').scrollIntoView()); await q.waitForTimeout(400);
-  ok(await q.getAttribute('.header nav a.attiva', 'href') === '#prezzi', 'PC: menu evidenzia Prezzi');
+  ok(await q.getAttribute('.header nav a[aria-current=page]', 'href') === 'prezzi.html', 'PC: menu evidenzia Prezzi');
   ok(!errs.length, 'errori JS: ' + errs.join(' | '));
   await b.close();
   console.log(`${n - err}/${n} prove ok`);
