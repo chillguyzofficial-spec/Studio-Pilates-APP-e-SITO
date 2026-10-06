@@ -18,13 +18,13 @@ const stato = p => p.evaluate(() => JSON.parse(localStorage.getItem('cr-demo-1')
   ok(await p.getAttribute('.header .accedi', 'href') === 'area/', 'sito: "Accedi" porta all\'area clienti');
   await p.click('.header .accedi'); await p.waitForTimeout(400);
   ok(/\/area\/(#benvenuto)?$/.test(p.url()), 'area: pagina di accesso');
-  ok(await p.locator('#f-email').count() === 1 && await p.locator('input[type=password]').count() === 0, 'accesso con email, nessuna password');
+  ok(await p.locator('#f-email').count() === 1 && await p.locator('input[type=password]').count() === 1, 'accesso con email e password');
   ok(await p.locator('.banner-app .qr-app svg').count() === 1, 'accesso: riquadro "Scarica l\'app" con QR');
   ok(await p.locator('meta[name=robots][content*=noindex]').count() === 1, 'area noindex');
   ok(await p.locator('link[rel=manifest]').count() === 0, 'area: non è installabile (è il sito)');
   await lato(p, 'area accesso');
   if (SHOT) await p.screenshot({ path: SHOT + '/a-accesso.png' });
-  await p.click('[data-act=entra]'); await p.waitForTimeout(400);
+  await p.fill('#f-email', 'chiara.bassi@esempio.it'); await p.fill('#f-pass', 'Respiro100'); await p.click('.accesso [type=submit]'); await p.waitForTimeout(400);
   ok(p.url().endsWith('#oggi'), 'entra → oggi');
   ok(await p.locator('.w-testa nav a').count() === 5, 'testata con 5 voci di menu');
   ok(await p.locator('.nav').count() === 0, 'nessuna barra in basso da telefono');
@@ -70,7 +70,7 @@ const stato = p => p.evaluate(() => JSON.parse(localStorage.getItem('cr-demo-1')
   const q = await t.newPage(); q.on('pageerror', e => errs.push(e.message));
   await q.goto(base + 'area/#benvenuto'); await q.waitForTimeout(300);
   await lato(q, 'area telefono accesso');
-  await q.click('[data-act=entra]'); await q.waitForTimeout(300);
+  await q.fill('#f-email', 'chiara.bassi@esempio.it'); await q.fill('#f-pass', 'Respiro100'); await q.click('.accesso [type=submit]'); await q.waitForTimeout(300);
   for (const h of ['#oggi', '#orario', '#prenotazioni', '#carnet', '#profilo']) { await q.goto(base + 'area/' + h); await q.waitForTimeout(200); await lato(q, 'area telefono ' + h); }
   if (SHOT) await q.screenshot({ path: SHOT + '/a-tel-orario.png' });
   ok(!errs.length, 'errori JS: ' + errs.join(' | '));

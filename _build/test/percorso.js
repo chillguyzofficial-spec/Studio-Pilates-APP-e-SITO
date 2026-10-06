@@ -34,7 +34,7 @@ const stato = p => p.evaluate(() => JSON.parse(localStorage.getItem('cr-demo-1')
   // --- app: benvenuto ed entrata
   await p.goto(base + 'app/'); await p.evaluate(() => localStorage.clear());
   await vai('#benvenuto', '01-benvenuto');
-  await p.click('[data-act=entra]'); await p.waitForTimeout(300);
+  await p.fill('#f-email', 'chiara.bassi@esempio.it'); await p.fill('#f-pass', 'Respiro100'); await p.click('.accesso [type=submit]'); await p.waitForTimeout(300);
   ok(p.url().endsWith('#oggi'), 'entra → oggi');
   await lato('oggi'); await piccoli('oggi'); await foto('02-oggi');
   const S0 = await stato(p);

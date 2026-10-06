@@ -41,7 +41,7 @@ const stato = p => p.evaluate(() => JSON.parse(localStorage.getItem('cr-demo-1')
   ok(lato <= 1, 'sito telefono: niente scroll laterale (' + lato + ')');
 
   // --- area: usa il codice regalo e prenota una privata (stesso dispositivo)
-  await p.goto(base + 'area/#benvenuto'); await p.click('[data-act=entra]'); await p.waitForTimeout(200);
+  await p.goto(base + 'area/#benvenuto'); await p.fill('#f-email', 'chiara.bassi@esempio.it'); await p.fill('#f-pass', 'Respiro100'); await p.click('.accesso [type=submit]'); await p.waitForTimeout(200);
   const S0 = await stato(p);
   await p.goto(base + 'area/#carnet'); await p.waitForTimeout(200);
   await p.fill('#f-codice', codice); await p.click('[data-act=usaCodice]'); await p.waitForTimeout(300);

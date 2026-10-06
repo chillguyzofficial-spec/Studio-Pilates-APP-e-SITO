@@ -9,6 +9,12 @@ const MARCHIO = window.CR_MARCHIO || '';
 // stesso motore, due esperienze: l'app da telefono (app/) e l'area clienti nel browser (area/, body.web).
 // Condividono l'account (lo stesso stato salvato): una prenotazione fatta dal PC compare nell'app.
 const WEB = document.body.classList.contains('web');
+// account di prova (uguale per app e area clienti). La password non è scritta in chiaro: si confronta la sua impronta SHA-256.
+const ACCOUNT = { email: 'chiara.bassi@esempio.it', impronta: '503b04336249ca6c123b64d17616f503ec0fed435f645ec2197796b69738e305' };
+async function impronta(testo) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(testo));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+}
 
 // ---------- date ----------
 const pad = n => String(n).padStart(2, '0');
@@ -185,7 +191,11 @@ function fx(id, cls) {
 const fotoLezione = tipo => FOTO['app-lezione-' + tipo] ? 'app-lezione-' + tipo : 'app-lezione-base';
 const tacche = (on, grandi) => `<div class="tacche${grandi ? ' tacche--grandi' : ''}" aria-hidden="true">${Array.from({ length: 10 }, (_, i) => `<i${i >= 10 - on ? ' class="on"' : ''}></i>`).join('')}</div>`;
 const livello = t => t.liv ? `<span>${[1, 2, 3].map(i => `<i${i <= t.liv ? ' class="on"' : ''}></i>`).join('')}</span>` : '';
-const nonLetti = () => S.notifiche.filter(n => !n.letto).length;
+// un avviso "posto libero" resta da leggere solo finché l'offerta è ancora aperta
+const offertaViva = n => S.attesa.some(a => a.id === n.id && a.offerta && Date.now() < a.offerta.scade);
+const nonLetti = () => S.notifiche.filter(n => !n.letto && (n.tipo !== 'posto' || offertaViva(n))).length;
+// offerta chiusa (presa, rifiutata, scaduta): il suo avviso è letto
+const chiudiAvvisiPosto = id => S.notifiche.forEach(n => { if (n.tipo === 'posto' && n.id === id) n.letto = true; });
 
 const SEZIONI = [['oggi', 'Oggi'], ['orario', 'Orario'], ['prenotazioni', 'Prenotazioni'], ['carnet', 'Carnet'], ['profilo', 'Profilo']];
 function nav(attiva) {
@@ -346,7 +356,7 @@ function controlla() {
     if (a.offerta && ora > a.offerta.scade) { a.scaduta = true; cambiato = true; }
   });
   const scadute = S.attesa.filter(a => a.scaduta || (lezione(a.id) && lezione(a.id).inizio <= ora));
-  if (scadute.length) { scadute.forEach(a => { if (a.offerta) passaAlProssimo(a); }); S.attesa = S.attesa.filter(a => !scadute.includes(a)); cambiato = true; }
+  if (scadute.length) { scadute.forEach(a => { if (a.offerta) passaAlProssimo(a); chiudiAvvisiPosto(a.id); }); S.attesa = S.attesa.filter(a => !scadute.includes(a)); cambiato = true; }
   S.pren.forEach(p => {
     const l = lezione(p.id);
     if (!l || S.ricordati.includes(p.id)) return;
@@ -402,7 +412,16 @@ function prenotaFisse() {
 const V = {};
 let sel = { giorno: null, letto: {}, prova: {} };
 
-// accesso dal browser: email (nella versione vera arriva un link, niente password) + promozione dell'app
+// modulo d'accesso comune ad app e area clienti: email + password dell'account di prova (vedi ACCOUNT)
+function moduloAccesso() {
+  return `<form class="accesso" data-accesso novalidate>
+    <label class="campo">Email<input type="email" id="f-email" autocomplete="username" inputmode="email" aria-describedby="f-err" required></label>
+    <label class="campo">Password<span class="pass"><input type="password" id="f-pass" autocomplete="current-password" aria-describedby="f-err" required><button type="button" class="pass__mostra" data-act="mostraPass" aria-pressed="false">Mostra</button></span></label>
+    <p class="errore" id="f-err" role="alert" hidden></p>
+    <button class="btn" type="submit">Entra</button>
+  </form>`;
+}
+// accesso dal browser + promozione dell'app
 function benvenutoWeb() {
   const prova = S.prova && lezione(S.prova.id) && lezione(S.prova.id).inizio > Date.now() ? lezione(S.prova.id) : null;
   return `
@@ -414,10 +433,8 @@ function benvenutoWeb() {
       <div class="eti">Area clienti</div>
       <h1 class="h1">Bentornati in studio</h1>
       <p class="t16" style="margin:0">Prenota le lezioni, gestisci carnet e lista d'attesa.</p>
-      <label class="campo">Email<input type="email" id="f-email" value="chiara.bassi@esempio.it" autocomplete="email" inputmode="email" aria-describedby="f-email-err"></label>
-      <p class="errore" id="f-email-err" role="alert" hidden></p>
-      <button class="btn" type="button" data-act="entra">Entra</button>
-      <p class="t16 grigio" style="margin:0">Niente password: nella versione vera ti mandiamo un link via email. Demo: entri come Chiara, iscritta di prova, e non viene inviato nulla.</p>
+      ${moduloAccesso()}
+      <p class="t16 grigio" style="margin:0">Demo: l'account di prova è quello di Chiara, iscritta allo studio. Nessun dato reale.</p>
       ${prova ? `<a class="voce" href="#prova/fatto">La tua prova: ${quando(prova.inizio).toLowerCase()} alle ${prova.ora}<span>›</span></a>` : '<a class="link" href="#prova" style="justify-content:flex-start;padding:0">Prima volta? Prenota la prova gratuita</a>'}
       ${bannerApp()}
     </div>
@@ -430,10 +447,10 @@ V.benvenuto = () => WEB ? benvenutoWeb() : `
   <div class="marchio-riga" style="padding:12px 8px 0">${MARCHIO}<div><div class="marchio-nome">CENTO RESPIRI</div><div class="sopra" style="margin-top:6px">Pilates reformer · Torino</div></div></div>
   <h1 class="frase" style="padding:0 8px">Sei lettini, cinquanta minuti, cento respiri per cominciare.</h1>
   ${S.prova && lezione(S.prova.id) && lezione(S.prova.id).inizio > Date.now() ? `<a class="voce" href="#prova/fatto">La tua prova: ${quando(lezione(S.prova.id).inizio).toLowerCase()} alle ${lezione(S.prova.id).ora}<span>›</span></a>` : ''}
+  <div style="padding:0 8px">${moduloAccesso()}</div>
   <div class="giu">
-    <button class="btn" type="button" data-act="entra">Entra</button>
     <a class="link" href="#prova">Prima volta? Prenota la prova gratuita</a>
-    <p class="demo-nota" style="margin:0">Demo: entri come Chiara, iscritta di prova. Nessun dato reale.</p>
+    <p class="demo-nota" style="margin:0">Demo: l'account di prova è quello di Chiara. Nessun dato reale.</p>
     <a class="link" href="../">‹ Torna al sito</a>
   </div>
 </main>`;
@@ -855,34 +872,34 @@ function disegna(nuova = true) {
   document.title = (WEB ? 'Area clienti · ' : '') + 'Cento Respiri' + (nome !== 'benvenuto' ? ' · ' + Maiusc(nome) : '');
   if (nuova) { scrollTo(0, 0); const m = app.querySelector('main'); if (m && ultima) m.focus({ preventScroll: true }); }
   else scrollTo(0, y);
-  if (nome === 'avvisi' && S.notifiche.some(n => !n.letto && n.tipo !== 'posto')) { S.notifiche.forEach(n => { if (n.tipo !== 'posto') n.letto = true; }); salva(); }
+  // aperti gli avvisi, sono tutti letti; resta acceso solo un posto libero ancora da confermare
+  if (nome === 'avvisi' && S.notifiche.some(n => !n.letto && !(n.tipo === 'posto' && offertaViva(n)))) { S.notifiche.forEach(n => { if (!(n.tipo === 'posto' && offertaViva(n))) n.letto = true; }); salva(); }
   ultima = location.hash;
 }
 addEventListener('hashchange', () => { chiudiFoglio(); chiudiQR(); disegna(true); });
 
 // ---------- azioni ----------
 const A = {
-  entra() {
-    // area clienti: serve un'email valida (nella versione vera arriva il link d'accesso a quell'indirizzo)
-    const campo = document.getElementById('f-email');
-    if (campo) {
-      const v = campo.value.trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
-        // errore sotto il campo (un avviso volante su telefono copriva il pulsante Entra)
-        campo.setAttribute('aria-invalid', 'true');
-        const er = document.getElementById('f-email-err');
-        er.textContent = v ? 'Questa email non sembra completa: controlla, ad esempio nome@esempio.it.' : 'Scrivi la tua email per entrare.';
-        er.hidden = false; campo.focus();
-        campo.addEventListener('input', () => { campo.removeAttribute('aria-invalid'); er.hidden = true; }, { once: true });
-        return;
-      }
-      S.utente.email = v.slice(0, 80);
-    }
+  async entra() {
+    // email + password dell'account di prova; errori sotto i campi (un avviso volante su telefono copriva il pulsante)
+    const em = document.getElementById('f-email'), pw = document.getElementById('f-pass'), er = document.getElementById('f-err');
+    if (!em || !pw) return;
+    const errore = (campo, testo) => {
+      [em, pw].forEach(c => c.removeAttribute('aria-invalid'));
+      campo.setAttribute('aria-invalid', 'true'); er.textContent = testo; er.hidden = false; campo.focus();
+      [em, pw].forEach(c => c.addEventListener('input', () => { em.removeAttribute('aria-invalid'); pw.removeAttribute('aria-invalid'); er.hidden = true; }, { once: true }));
+    };
+    const v = em.value.trim().toLowerCase();
+    if (!v) return errore(em, 'Scrivi la tua email per entrare.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) return errore(em, 'Questa email non sembra completa: controlla, ad esempio nome@esempio.it.');
+    if (!pw.value) return errore(pw, 'Scrivi la password.');
+    if (v !== ACCOUNT.email || await impronta(pw.value) !== ACCOUNT.impronta) return errore(pw, 'Email o password non corretti.');
     S.entrato = true; salva();
     let dopo = null; try { dopo = sessionStorage.getItem('cr-dopo'); sessionStorage.removeItem('cr-dopo'); } catch (e) { /* niente */ }
     location.hash = dopo && dopo !== '#benvenuto' ? dopo : '#oggi';
   },
   esci() { S.entrato = false; salva(); location.hash = '#benvenuto'; },
+  mostraPass(d, b) { const pw = document.getElementById('f-pass'), vedi = pw.type === 'password'; pw.type = vedi ? 'text' : 'password'; b.textContent = vedi ? 'Nascondi' : 'Mostra'; b.setAttribute('aria-pressed', vedi); },
   indietro() { if (history.length > 1 && ultima) history.back(); else location.hash = S.entrato ? '#oggi' : '#benvenuto'; },
   settimana(d) { sel.giorno = ymd(piuGiorni(daYmd(sel.giorno), +d.d)); const o = oggi0(); if (daYmd(sel.giorno) < o) sel.giorno = ymd(o); while (daYmd(sel.giorno).getDay() === 0) sel.giorno = ymd(piuGiorni(daYmd(sel.giorno), 1)); disegna(false); },
   giorno(d) { sel.giorno = d.g; disegna(false); },
@@ -909,6 +926,7 @@ const A = {
   esciLista(d) {
     const a = S.attesa.find(x => x.id === d.id);
     if (a && a.offerta) passaAlProssimo(a);
+    chiudiAvvisiPosto(d.id);
     const l = lezione(d.id);
     if (l && fissaDi(l) && !S.saltate.includes(d.id)) S.saltate.push(d.id); // non rimettersi in lista da sola
     S.attesa = S.attesa.filter(x => x.id !== d.id); salva();
@@ -917,7 +935,7 @@ const A = {
   prendiPosto(d) {
     const a = S.attesa.find(x => x.id === d.id), l = lezione(d.id);
     if (!a || !a.offerta || !l || Date.now() > a.offerta.scade) { toast('Offerta scaduta.'); disegna(false); return; }
-    if (prenota(l, a.offerta.letto)) { S.notifiche.forEach(n => { if (n.tipo === 'posto' && n.id === d.id) n.letto = true; }); salva(); toast(`Il posto è tuo: lettino ${a.offerta.letto}.`); location.hash = '#lezione/' + d.id; }
+    if (prenota(l, a.offerta.letto)) { chiudiAvvisiPosto(d.id); salva(); toast(`Il posto è tuo: lettino ${a.offerta.letto}.`); location.hash = '#lezione/' + d.id; }
   },
   qr() { apriQR(); },
   compra(d) {
@@ -1047,7 +1065,8 @@ document.addEventListener('click', e => {
   const f = A[b.dataset.act];
   if (f) { e.preventDefault(); f(b.dataset, b); }
 });
-document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'f-email') { e.preventDefault(); A.entra(); } });
+// accesso: il modulo si invia con il pulsante Entra o con Invio da qualsiasi campo
+document.addEventListener('submit', e => { if (e.target.matches('[data-accesso]')) { e.preventDefault(); A.entra(); } });
 document.addEventListener('change', e => {
   const el = e.target.closest('input[data-act], select[data-act]');
   if (el && A[el.dataset.act]) A[el.dataset.act](el.dataset, el);

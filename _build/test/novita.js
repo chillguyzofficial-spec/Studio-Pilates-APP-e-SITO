@@ -32,7 +32,7 @@ const stato = p => p.evaluate(() => JSON.parse(localStorage.getItem('cr-demo-1')
   // da non entrato: Benvenuto, poi "Entra" porta alla lezione scelta
   await p.click('#op-6 .orario__riga'); await p.waitForTimeout(400);
   ok(p.url().endsWith('#benvenuto'), 'lezione da non entrato → benvenuto');
-  await p.click('[data-act=entra]'); await p.waitForTimeout(300);
+  await p.fill('#f-email', 'chiara.bassi@esempio.it'); await p.fill('#f-pass', 'Respiro100'); await p.click('.accesso [type=submit]'); await p.waitForTimeout(300);
   ok(p.url().endsWith(href.replace("area/", "")), 'dopo Entra → la lezione scelta nel sito');
 
   // --- progressi
@@ -95,7 +95,7 @@ const stato = p => p.evaluate(() => JSON.parse(localStorage.getItem('cr-demo-1')
   // --- lista d'attesa automatica (demo nuova: il posto si libera dopo ~30 s)
   const c2 = await b.newContext({ ...pw.devices['iPhone 13'] });
   const q = await c2.newPage(); q.on('pageerror', e => errs.push(e.message));
-  await q.goto(base + 'app/#benvenuto'); await q.click('[data-act=entra]'); await q.waitForTimeout(200);
+  await q.goto(base + 'app/#benvenuto'); await q.fill('#f-email', 'chiara.bassi@esempio.it'); await q.fill('#f-pass', 'Respiro100'); await q.click('.accesso [type=submit]'); await q.waitForTimeout(200);
   await q.goto(base + 'app/#profilo'); await q.waitForTimeout(200);
   await q.click('input[data-k=auto]'); await q.waitForTimeout(100);
   const S0 = await stato(q);

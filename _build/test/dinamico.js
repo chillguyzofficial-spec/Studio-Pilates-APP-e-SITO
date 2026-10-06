@@ -56,7 +56,7 @@ const ok = (c, m) => { n++; if (!c) { err++; console.log('ERR ' + m); } else if 
   }
   // area clienti da telefono: il menu va a capo, non scorre
   const t = await b.newContext({ ...pw.devices['iPhone 13'] }), q = await t.newPage();
-  await q.goto(base + 'area/#benvenuto'); await q.click('[data-act=entra]'); await q.waitForTimeout(300);
+  await q.goto(base + 'area/#benvenuto'); await q.fill('#f-email', 'chiara.bassi@esempio.it'); await q.fill('#f-pass', 'Respiro100'); await q.click('.accesso [type=submit]'); await q.waitForTimeout(300);
   ok(await q.evaluate(() => !/(auto|scroll)/.test(getComputedStyle(document.querySelector('.w-testa nav')).overflowX)), 'area telefono: menu senza scorrimento laterale');
   ok(await q.evaluate(() => [...document.querySelectorAll('.w-testa nav a')].every(a => { const r = a.getBoundingClientRect(); return r.right <= innerWidth && r.left >= 0; })), 'area telefono: tutte le voci del menu visibili');
   ok(!errs.length, 'errori JS: ' + errs.join(' | '));

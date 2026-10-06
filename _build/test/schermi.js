@@ -17,7 +17,7 @@ const PAGINE = ['', 'lezioni.html', 'orario.html', 'istruttori.html', 'prezzi.ht
     p.on('pageerror', e => errs.push(e.message));
     await p.goto(base + 'app/#benvenuto'); await p.evaluate(() => { localStorage.clear(); });
     for (const u of PAGINE) {
-      if (u === 'area/#oggi' || u === 'app/#oggi') { await p.goto(base + u.split('#')[0] + '#benvenuto'); await p.waitForTimeout(150); if (await p.locator('[data-act=entra]').count()) await p.click('[data-act=entra]'); }
+      if (u === 'area/#oggi' || u === 'app/#oggi') { await p.goto(base + u.split('#')[0] + '#benvenuto'); await p.waitForTimeout(150); if (await p.locator('[data-accesso]').count()) { await p.fill('#f-email', 'chiara.bassi@esempio.it'); await p.fill('#f-pass', 'Respiro100'); await p.click('.accesso [type=submit]'); } }
       await p.goto(base + u); await p.waitForTimeout(250);
       for (let y = 0; y < 9000; y += 700) { await p.evaluate(y => scrollTo(0, y), y); await p.waitForTimeout(25); }
       const r = await p.evaluate(() => {

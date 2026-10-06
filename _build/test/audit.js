@@ -65,7 +65,7 @@ const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'lug
   {
     const c = await b.newContext({ ...pw.devices['iPhone 13'] }), p = await c.newPage();
     await p.goto(base + 'app/#benvenuto'); await p.evaluate(() => localStorage.clear()); await p.goto(base + 'app/#benvenuto');
-    await p.click('[data-act=entra]'); await p.waitForTimeout(300);
+    await p.fill('#f-email', 'chiara.bassi@esempio.it'); await p.fill('#f-pass', 'Respiro100'); await p.click('.accesso [type=submit]'); await p.waitForTimeout(300);
     const oggi = new Date(), atteso = `${GIORNI[oggi.getDay()]} ${oggi.getDate()} ${MESI[oggi.getMonth()]}`;
     ok((await p.textContent('main .sopra')).toLowerCase() === atteso, `app: data di oggi "${atteso}"`);
     await p.goto(base + 'app/#orario'); await p.waitForTimeout(200);
@@ -79,7 +79,7 @@ const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'lug
     const c2 = await b.newContext({ ...pw.devices['iPhone 13'] }), q = await c2.newPage();
     await q.clock.install({ time: new Date('2026-10-14T23:59:50') });
     await q.goto(base + 'app/#benvenuto'); await q.evaluate(() => localStorage.clear()); await q.goto(base + 'app/#benvenuto');
-    await q.click('[data-act=entra]'); await q.waitForTimeout(200);
+    await q.fill('#f-email', 'chiara.bassi@esempio.it'); await q.fill('#f-pass', 'Respiro100'); await q.click('.accesso [type=submit]'); await q.waitForTimeout(200);
     await q.goto(base + 'app/#orario'); await q.waitForTimeout(200);
     ok(await q.getAttribute('.giorno.sel', 'data-g') === '2026-10-14', 'mezzanotte: prima, orario su mercoledì 14');
     await q.clock.runFor(30000); await q.waitForTimeout(300);
@@ -96,7 +96,7 @@ const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'lug
     const c = await b.newContext({ viewport: { width: 1440, height: 900 } }), p = await c.newPage();
     const errs = []; p.on('pageerror', e => errs.push(e.message));
     await p.goto(base + 'area/#benvenuto'); await p.evaluate(() => localStorage.clear()); await p.goto(base + 'area/#benvenuto');
-    await p.click('[data-act=entra]'); await p.waitForTimeout(300);
+    await p.fill('#f-email', 'chiara.bassi@esempio.it'); await p.fill('#f-pass', 'Respiro100'); await p.click('.accesso [type=submit]'); await p.waitForTimeout(300);
     const problemi = await p.evaluate(() => {
       const M = window.CR_MOTORE, out = [];
       let seme = 7; const caso = k => (seme = (seme * 1103515245 + 12345) % 2147483648) % k;
@@ -152,7 +152,7 @@ const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'lug
   {
     const c = await b.newContext({ ...pw.devices['iPhone 13'] }), p = await c.newPage();
     await p.goto(base + 'app/#benvenuto'); await p.evaluate(() => localStorage.clear()); await p.goto(base + 'app/#benvenuto');
-    await p.click('[data-act=entra]'); await p.waitForTimeout(300);
+    await p.fill('#f-email', 'chiara.bassi@esempio.it'); await p.fill('#f-pass', 'Respiro100'); await p.click('.accesso [type=submit]'); await p.waitForTimeout(300);
     const r = await p.evaluate(() => {
       const M = window.CR_MOTORE, S = M.S, out = {};
       const trova = (dmin, dmax, filtro = () => true) => { for (let i = dmin; i <= dmax; i++) { const l = M.lezioniDel(M.piuGiorni(M.oggi0(), i)).find(x => x.inizio > Date.now() + 3600e3 && !M.stato(x.id).pieno && !M.stato(x.id).mia && filtro(x)); if (l) return l; } return null; };
@@ -213,26 +213,51 @@ const MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'lug
   {
     const c = await b.newContext({ viewport: { width: 1440, height: 900 } }), p = await c.newPage();
     await p.goto(base + 'area/#benvenuto'); await p.evaluate(() => { localStorage.clear(); sessionStorage.clear(); }); await p.goto(base + 'area/#benvenuto'); await p.waitForTimeout(200);
-    await p.fill('#f-email', ''); await p.click('[data-act=entra]'); await p.waitForTimeout(200);
-    ok(p.url().endsWith('#benvenuto') && await p.getAttribute('#f-email', 'aria-invalid') === 'true', 'accesso: email vuota rifiutata');
-    await p.fill('#f-email', 'giulia@'); await p.click('[data-act=entra]'); await p.waitForTimeout(200);
-    ok(p.url().endsWith('#benvenuto'), 'accesso: email incompleta rifiutata');
-    ok(await p.isVisible('#f-email-err') && /non sembra completa/.test(await p.textContent('#f-email-err')), 'accesso: messaggio chiaro sotto il campo');
-    await p.fill('#f-email', 'giulia.r'); ok(await p.isHidden('#f-email-err'), 'accesso: il messaggio sparisce quando correggi');
-    await p.fill('#f-email', 'giulia.rossi@esempio.it'); await p.press('#f-email', 'Enter'); await p.waitForTimeout(300);
-    ok(p.url().endsWith('#oggi'), 'accesso: Invio fa entrare');
-    await p.goto(base + 'area/#profilo'); await p.waitForTimeout(200);
-    ok((await p.textContent('.utente .mail')).includes('giulia.rossi@esempio.it'), 'accesso: il profilo mostra l\'email usata');
+    const invia = async () => { await p.click('.accesso [type=submit]'); await p.waitForTimeout(250); };
+    ok(await p.inputValue('#f-email') === '' && await p.inputValue('#f-pass') === '', 'accesso: campi vuoti (niente account precompilato)');
+    ok(await p.getAttribute('#f-pass', 'type') === 'password', 'accesso: la password è nascosta');
+    ok(!/Respiro100/.test(await (await p.request.get(base + 'app/app.js')).text()), 'accesso: la password non è scritta in chiaro nel codice');
+    await invia();
+    ok(p.url().endsWith('#benvenuto') && /Scrivi la tua email/.test(await p.textContent('#f-err')), 'accesso: email vuota rifiutata');
+    await p.fill('#f-email', 'giulia@'); await p.fill('#f-pass', 'x'); await invia();
+    ok(p.url().endsWith('#benvenuto') && /non sembra completa/.test(await p.textContent('#f-err')), 'accesso: email incompleta rifiutata, messaggio sotto il campo');
+    await p.fill('#f-email', 'chiara.bassi@esempio.it'); ok(await p.isHidden('#f-err'), 'accesso: il messaggio sparisce quando correggi');
+    await p.fill('#f-pass', ''); await invia();
+    ok(/Scrivi la password/.test(await p.textContent('#f-err')), 'accesso: password vuota rifiutata');
+    await p.fill('#f-pass', 'respiro100'); await invia();
+    ok(p.url().endsWith('#benvenuto') && /non corretti/.test(await p.textContent('#f-err')), 'accesso: password sbagliata (maiuscole contano) rifiutata');
+    await p.fill('#f-email', 'altra@esempio.it'); await p.fill('#f-pass', 'Respiro100'); await invia();
+    ok(p.url().endsWith('#benvenuto') && /non corretti/.test(await p.textContent('#f-err')), 'accesso: email sbagliata rifiutata');
+    await p.click('[data-act=mostraPass]');
+    ok(await p.getAttribute('#f-pass', 'type') === 'text' && /Nascondi/.test(await p.textContent('[data-act=mostraPass]')), 'accesso: "Mostra" fa vedere la password');
+    await p.fill('#f-email', 'Chiara.Bassi@esempio.it '); await p.fill('#f-pass', 'Respiro100'); await p.press('#f-pass', 'Enter'); await p.waitForTimeout(300);
+    ok(p.url().endsWith('#oggi'), 'accesso: Invio fa entrare (email anche con maiuscole e spazio)');
+    await p.reload(); await p.waitForTimeout(300);
+    ok(p.url().endsWith('#oggi'), 'accesso: resta collegato ricaricando la pagina');
     await p.click('.w-testa [data-act=esci]'); await p.waitForTimeout(200);
     ok(p.url().endsWith('#benvenuto'), 'accesso: Esci torna all\'accesso');
     await p.goto(base + 'area/#prenotazioni'); await p.waitForTimeout(200);
     ok(p.url().endsWith('#benvenuto'), 'accesso: da fuori le pagine riservate rimandano all\'accesso');
-    await p.fill('#f-email', 'giulia.rossi@esempio.it'); await p.click('[data-act=entra]'); await p.waitForTimeout(300);
+    await p.fill('#f-email', 'chiara.bassi@esempio.it'); await p.fill('#f-pass', 'Respiro100'); await invia(); await p.waitForTimeout(100);
     ok(p.url().endsWith('#prenotazioni'), 'accesso: dopo l\'accesso torna alla pagina richiesta');
+    // avvisi: aperti una volta, il contatore si spegne; un posto offerto e poi rifiutato non resta "da leggere"
+    const nl = () => p.evaluate(() => { const S = window.CR_MOTORE.S; return S.notifiche.filter(n => !n.letto && (n.tipo !== 'posto' || S.attesa.some(a => a.id === n.id && a.offerta && Date.now() < a.offerta.scade))).length; });
+    await p.goto(base + 'area/#avvisi'); await p.waitForTimeout(200); await p.goto(base + 'area/#oggi'); await p.waitForTimeout(200);
+    ok(!/Avvisi\s*\d/.test(await p.textContent('.w-testa')), 'avvisi: dopo averli aperti il contatore è spento');
+    await p.waitForFunction(() => window.CR_MOTORE.S.attesa.some(a => a.offerta), null, { timeout: 45000 }).catch(() => {});
+    const offerta = await p.evaluate(() => (window.CR_MOTORE.S.attesa.find(a => a.offerta) || {}).id);
+    if (offerta) {
+      await p.goto(base + 'area/#oggi'); await p.waitForTimeout(300);
+      ok(/Avvisi\s*1/.test(await p.textContent('.w-testa')), 'avvisi: posto libero → contatore a 1');
+      await p.goto(base + 'area/#avvisi'); await p.waitForTimeout(200);
+      await p.click('.avviso [data-act=esciLista]'); await p.waitForTimeout(300);
+      await p.goto(base + 'area/#oggi'); await p.waitForTimeout(300);
+      ok(!/Avvisi\s*\d/.test(await p.textContent('.w-testa')) && await nl() === 0, 'avvisi: posto rifiutato → contatore spento');
+    }
     // app da telefono: entra ed esci
     const t = await b.newContext({ ...pw.devices['iPhone 13'] }), q = await t.newPage();
     await q.goto(base + 'app/#benvenuto'); await q.evaluate(() => localStorage.clear()); await q.goto(base + 'app/#benvenuto'); await q.waitForTimeout(200);
-    await q.click('[data-act=entra]'); await q.waitForTimeout(200);
+    await q.fill('#f-email', 'chiara.bassi@esempio.it'); await q.fill('#f-pass', 'Respiro100'); await q.click('.accesso [type=submit]'); await q.waitForTimeout(200);
     ok(q.url().endsWith('#oggi'), 'app: Entra porta a Oggi');
     await q.goto(base + 'app/#profilo'); await q.click('[data-act=esci]'); await q.waitForTimeout(200);
     ok(q.url().endsWith('#benvenuto'), 'app: Esci torna al benvenuto');

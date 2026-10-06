@@ -22,7 +22,7 @@ const scorri = async p => { for (let y = 0; y < 12000; y += 600) { await p.evalu
     await p.goto(base + 'app/#benvenuto'); await p.evaluate(() => localStorage.clear());
     await verifica('app/#benvenuto', 'app benvenuto');
     await verifica('app/#prova', 'app prova');
-    await p.goto(base + 'app/#benvenuto'); await p.click('[data-act=entra]'); await p.waitForTimeout(200);
+    await p.goto(base + 'app/#benvenuto'); await p.fill('#f-email', 'chiara.bassi@esempio.it'); await p.fill('#f-pass', 'Respiro100'); await p.click('.accesso [type=submit]'); await p.waitForTimeout(200);
     await verifica('app/#oggi', 'app oggi');
     const id = await p.evaluate(() => { const d = new Date(), S = window.CR_DATI.SCHEMA, pd = x => String(x).padStart(2, '0'); for (let i = 1; i < 8; i++) { const x = new Date(d); x.setDate(d.getDate() + i); const l = (S[x.getDay()] || [])[0]; if (l) return `${x.getFullYear()}-${pd(x.getMonth() + 1)}-${pd(x.getDate())}_${l[0].replace(':', '')}`; } });
     await verifica('app/#lezione/' + id, 'app lezione');

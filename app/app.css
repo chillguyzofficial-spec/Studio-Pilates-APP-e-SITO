@@ -224,3 +224,9 @@ body.app{background:var(--sabbia);min-height:100svh}
 /* errore dei campi: sotto il campo, mai sopra i pulsanti */
 .campo input[aria-invalid="true"]{border-color:#B3261E;box-shadow:0 0 0 1px #B3261E}
 .errore{margin:-4px 0 0;font-size:16px;color:#B3261E;font-weight:500}
+/* modulo d'accesso: email, password con "Mostra" */
+.accesso{display:flex;flex-direction:column;gap:12px}
+.pass{position:relative;display:block}
+.pass input{padding-right:96px}
+.pass__mostra{position:absolute;right:6px;top:50%;transform:translateY(-50%);min-height:40px;padding:0 12px;border:0;border-radius:10px;background:transparent;color:var(--barolo);font-size:15px;font-weight:600;cursor:pointer}
+.pass__mostra:hover{background:var(--sabbia)}
