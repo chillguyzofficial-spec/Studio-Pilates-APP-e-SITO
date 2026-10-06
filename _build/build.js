@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const SITO = 'https://chillguyzofficial-spec.github.io/Studio-Pilates-APP-e-SITO/'; // indirizzo pubblico (anteprime di condivisione)
-const V = '7'; // cache-busting di css/js: alzarlo a ogni pubblicazione
+const V = '8'; // cache-busting di css/js: alzarlo a ogni pubblicazione
 const DATI = require('../app/dati.js'); // orario, lezioni e istruttori: gli stessi dell'app
 const GBREVI = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
 const GNOMI = ['Domenica', 'Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato'];
@@ -73,16 +73,31 @@ const PREZZI = [
   { name: 'Carnet 10 ingressi', price: '250 €', unit: '25 € a lezione', text: 'La formula più scelta, per due lezioni a settimana.', note: 'Valido 4 mesi' },
   { name: 'Mensile illimitato', price: '169 €', unit: 'al mese', text: 'Tutte le lezioni, prenotazione fino a 14 giorni prima.', note: 'Rinnovo mensile, disdici quando vuoi' },
 ];
-const FAQ = [
-  ['Devo aver già fatto pilates?', 'No. La prova gratuita è in Reformer Base: l\'istruttore ti spiega il lettino prima di cominciare.'],
-  ['Cosa devo portare?', 'Abiti comodi e aderenti e calze antiscivolo. Se non le hai, te le diamo noi. Asciugamano e acqua ci sono.'],
-  ['Serve il certificato medico?', 'No, per il pilates amatoriale non è obbligatorio. Se hai condizioni particolari puoi caricarlo nell\'app: lo vede solo lo staff.'],
-  ['Come annullo una lezione?', 'Dall\'area clienti del sito o dall\'app, nella sezione Prenotazioni. Fino a 12 ore prima l\'ingresso torna nel carnet; dopo viene scalato.'],
-  ['Cosa succede se la lezione è piena?', 'Ti metti in lista d\'attesa. Se si libera un posto ti arriva una notifica e hai 45 minuti per confermarlo.'],
-  ['Posso venire in gravidanza?', 'Sì, dal secondo trimestre e con il via libera del ginecologo, nelle lezioni Prenatale con Elena.'],
-  ['Serve l\'app per prenotare?', 'No: puoi prenotare anche dal computer, nell\'area clienti del sito. L\'app è più comoda dal telefono: avviso quando si libera un posto, QR per entrare in studio, funziona anche senza rete.'],
-  ['Come installo l\'app?', 'Apri l\'app dal telefono: su iPhone con Safari, tasto Condividi, "Aggiungi alla schermata Home"; su Android Chrome te lo propone da solo. Nel Profilo trovi la guida passo per passo.'],
+// domande divise per tema: prima il metodo (risposte tecniche ma brevi, verificate su studi e linee guida), poi la pratica
+const FAQ_GRUPPI = [
+  ['Il metodo', [
+    ['Che differenza c\'è tra pilates sul tappetino e sul reformer?', 'Gli esercizi e i principi sono gli stessi. Sul tappetino lavori a corpo libero: serve più controllo per stabilizzarti. Sul reformer il carrello scorre e le molle aggiungono resistenza o ti sostengono, così lo stesso esercizio si può rendere più facile o più impegnativo, e si lavora con un\'ampiezza di movimento maggiore. Per chi comincia il reformer spesso è più semplice, perché guida il movimento.'],
+    ['A cosa servono le molle, e cosa vogliono dire i colori?', 'Le molle collegano il carrello al telaio: più molle o molle più dure significano più resistenza. Sui nostri reformer vanno dalla molto leggera alla pesante, con un colore ciascuna (i colori cambiano da marca a marca). Attenzione: più leggero non vuol dire più facile. Con poca resistenza il carrello è più instabile e devi controllarlo tu, con gli addominali profondi. Per questo l\'istruttore le regola per ogni persona e per ogni esercizio.'],
+    ['Quante volte a settimana servono per vedere risultati?', 'Negli studi lo schema più usato è di 2 o 3 lezioni a settimana per almeno 8 settimane, e due lezioni danno già quasi lo stesso risultato di tre. In pratica: con due lezioni a settimana, dopo un paio di mesi senti la differenza in forza, postura e mobilità. Una a settimana va bene per mantenere.'],
+    ['Il pilates aiuta con il mal di schiena?', 'Per il mal di schiena cronico, quello senza una causa precisa, le revisioni degli studi più recenti mostrano meno dolore e meno disabilità rispetto al non fare esercizio. Non è però una terapia: con dolore acuto, formicolii alle gambe, dopo un intervento o un trauma serve prima il medico o il fisioterapista. Diccelo alla prima lezione: Elena è fisioterapista e adattiamo gli esercizi.'],
+    ['Il pilates fa dimagrire?', 'Aiuta, ma non è la sua specialità. Negli studi su persone in sovrappeso il pilates fatto con costanza riduce peso e massa grassa, soprattutto nei programmi lunghi. Il suo punto forte però è un altro: forza profonda, postura, mobilità e controllo del movimento. Per dimagrire contano soprattutto alimentazione e attività di tutta la settimana.'],
+    ['Quali sono i principi del metodo?', 'Sei: respiro, centro (il «powerhouse», addominali profondi e muscoli attorno al bacino), concentrazione, controllo, precisione e fluidità. Sono il motivo per cui una lezione di pilates è lenta e precisa: conta come fai il movimento, non quante ripetizioni.'],
+  ]],
+  ['Prima di venire', [
+    ['Devo aver già fatto pilates?', 'No. La prova gratuita è in Reformer Base: nei primi dieci minuti l\'istruttore fa una breve valutazione (come stai in piedi, mobilità di schiena e anche, eventuali dolori) e ti spiega carrello, molle e cinghie. La valutazione non è una visita medica: serve a scegliere il livello e le molle giuste.'],
+    ['Cosa devo portare?', 'Abiti comodi e aderenti e calze antiscivolo: servono per l\'igiene e per non scivolare sul carrello. Se non le hai, te le diamo noi. Asciugamano e acqua ci sono.'],
+    ['Serve il certificato medico?', 'No, per il pilates amatoriale non è obbligatorio. Se hai condizioni particolari puoi caricarlo nell\'app: lo vede solo lo staff.'],
+    ['Posso venire in gravidanza?', 'Sì, dal secondo trimestre e con il via libera del ginecologo, nelle lezioni Prenatale con Elena. Seguiamo le linee guida sull\'attività in gravidanza: niente esercizi a lungo sdraiate sulla schiena dopo il primo trimestre (si lavora sul fianco, sedute o con lo schienale rialzato), intensità moderata, niente apnee.'],
+    ['Quando passo da Base a Intermedio?', 'Non dopo un tempo fisso, ma quando l\'istruttore vede che controlli il carrello, mantieni il bacino stabile e coordini il respiro nelle serie di base. Di solito succede dopo una decina di lezioni. Te lo proponiamo noi: puoi sempre tornare in Base.'],
+  ]],
+  ['Prenotazioni e app', [
+    ['Come annullo una lezione?', 'Dall\'area clienti del sito o dall\'app, nella sezione Prenotazioni. Fino a 12 ore prima l\'ingresso torna nel carnet; dopo viene scalato.'],
+    ['Cosa succede se la lezione è piena?', 'Ti metti in lista d\'attesa. Se si libera un posto ti arriva una notifica e hai 45 minuti per confermarlo, oppure attivi «prendilo per me» e lo prenotiamo noi.'],
+    ['Serve l\'app per prenotare?', 'No: puoi prenotare anche dal computer, nell\'area clienti del sito. L\'app è più comoda dal telefono: avviso quando si libera un posto, QR per entrare in studio, funziona anche senza rete.'],
+    ['Come installo l\'app?', 'Apri l\'app dal telefono: su iPhone con Safari, tasto Condividi, «Aggiungi alla schermata Home»; su Android Chrome te lo propone da solo. Nel Profilo trovi la guida passo per passo.'],
+  ]],
 ];
+const FAQ = FAQ_GRUPPI.flatMap(([, d]) => d);
 const MENU = [['metodo', 'Il metodo'], ['lezioni', 'Lezioni'], ['orario', 'Orario'], ['prezzi', 'Prezzi'], ['regala', 'Regala'], ['studio', 'Lo studio'], ['dove', 'Dove siamo']];
 const STRISCIA = ['studio-ingresso', 'studio-accoglienza', 'studio-barrel', 'studio-kit'];
 
@@ -130,7 +145,8 @@ ${extra}</head>`;
 
 // ---------- sito: 8 pagine con testata, menu e footer comuni ----------
 // struttura come i migliori studi del 2026: home breve + lezioni, orario, istruttori, prezzi (+ regala, studio, domande)
-const PAG = [['lezioni.html', 'Lezioni'], ['orario.html', 'Orario'], ['istruttori.html', 'Istruttori'], ['prezzi.html', 'Prezzi'], ['regala.html', 'Regala'], ['studio.html', 'Lo studio']];
+// menu: le pagine principali; "Regala" sta dentro Prezzi (e nel footer), "Domande" entra nel menu
+const PAG = [['lezioni.html', 'Lezioni'], ['orario.html', 'Orario'], ['istruttori.html', 'Istruttori'], ['prezzi.html', 'Prezzi'], ['studio.html', 'Lo studio'], ['domande.html', 'Domande']];
 const battiti = Array.from({ length: 100 }, (_, i) => `<span${i % 10 === 9 ? ' class="r"' : i % 10 >= 5 ? ' class="f"' : ''}></span>`).join('');
 // lezioni della settimana di un istruttore o di un tipo, dall'orario vero (app/dati.js)
 const settimanaDi = filtro => [1, 2, 3, 4, 5, 6].map(g => [g, DATI.SCHEMA[g].filter(filtro)]).filter(([, l]) => l.length);
@@ -140,7 +156,7 @@ const PROFILI = {
   marta: {
     foto: 'sito-marta', ruolo: 'Fondatrice · Base e Intermedio', dal: 'Insegna dal 2011',
     storia: 'Ha cominciato col pilates per un mal di schiena da scrivania e non ha più smesso. Dopo dieci anni in palestre grandi ha aperto Cento Respiri nel 2019 con un\'idea semplice: classi da sei, per conoscere ognuno per nome e ricordarsi come si muove.',
-    formazione: ['Laurea in Scienze motorie', 'Diploma di insegnante pilates, matwork e grandi attrezzi (450 ore)', 'Aggiornamento su pilates e mal di schiena cronico'],
+    formazione: ['Laurea in Scienze motorie', 'Diploma di insegnante pilates, matwork e grandi attrezzi (oltre 450 ore)', 'Aggiornamento su pilates e mal di schiena cronico'],
     stile: 'Precisa e calma. Corregge con le parole prima che con le mani e ti spiega sempre perché un esercizio si fa così.',
     con: ['Chi comincia da zero', 'Chi passa la giornata seduto', 'Chi vuole una tecnica pulita prima di salire di livello'],
     frase: 'Il reformer non perdona la fretta. È il suo bello.',
@@ -148,7 +164,7 @@ const PROFILI = {
   elena: {
     foto: 'sito-elena', ruolo: 'Fisioterapista · Base e Prenatale', dal: 'Nello studio dal 2020',
     storia: 'Fisioterapista, lavora da anni con chi riprende a muoversi dopo un infortunio. Il pilates è arrivato come strumento di lavoro ed è diventato il suo modo di insegnare: pochi esercizi, scelti bene, fatti con attenzione.',
-    formazione: ['Laurea in Fisioterapia', 'Diploma di insegnante pilates sui grandi attrezzi', 'Formazione su pilates in gravidanza e nel post parto'],
+    formazione: ['Laurea in Fisioterapia', 'Diploma di insegnante pilates, matwork e grandi attrezzi (oltre 450 ore)', 'Formazione su pilates in gravidanza e nel post parto'],
     stile: 'Attenta e rassicurante. Adatta ogni esercizio al corpo che ha davanti, non il contrario.',
     con: ['Future mamme dal secondo trimestre', 'Chi torna dopo un infortunio o un intervento', 'Chi ha più di sessant\'anni e vuole muoversi in sicurezza'],
     frase: 'Prima di rinforzare, impariamo a respirare.',
@@ -156,19 +172,21 @@ const PROFILI = {
   davide: {
     foto: 'sito-davide', ruolo: 'Avanzato e Tower', dal: 'Nello studio dal 2021',
     storia: 'Quindici anni di danza classica, poi il pilates per prolungare la carriera e alla fine per insegnarlo. Dalla danza si è portato dietro l\'ossessione per l\'allineamento e la pazienza di ripetere un movimento finché è giusto.',
-    formazione: ['Diploma di danza classica', 'Diploma di insegnante pilates sui grandi attrezzi', 'Specializzazione sul lavoro alla Tower'],
+    formazione: ['Diploma di danza classica', 'Diploma di insegnante pilates, matwork e grandi attrezzi (oltre 450 ore)', 'Specializzazione sul lavoro alla Tower'],
     stile: 'Lento, preciso, faticoso. Poche pause e molta attenzione all\'equilibrio.',
     con: ['Chi ha già le basi e vuole salire di livello', 'Sportivi e runner che cercano mobilità', 'Chi vuole lavorare su equilibrio e postura'],
     frase: 'Lento non vuol dire facile.',
   },
 };
+// lavora: muscoli e capacità; intensita: 1-3; molle: indicazione generale (le regola l'istruttore per ognuno)
 const LEZ_DETTAGLI = {
-  base: { per: 'Chi non ha mai usato il reformer o riprende dopo una pausa.', cosa: 'Esercizi da sdraiati e seduti, molle leggere, tanto lavoro sul respiro e sull\'allineamento. Si impara a usare il lettino in sicurezza.' },
-  intermedio: { per: 'Chi ha fatto almeno dieci lezioni e conosce il lettino.', cosa: 'Serie complete, lavoro in ginocchio e in piedi sul carrello, transizioni più fluide. Il respiro guida il ritmo.' },
-  avanzato: { per: 'Chi ha basi solide, su indicazione dell\'istruttore.', cosa: 'Sequenze lunghe senza pause, equilibrio sul carrello in movimento, esercizi di forza e controllo.' },
-  prenatale: { per: 'Future mamme dal secondo trimestre, con il via libera del ginecologo.', cosa: 'Mobilità del bacino e della schiena, respiro, pavimento pelvico. Molle leggere e posizioni adattate mese per mese.' },
-  tower: { per: 'Tutti i livelli.', cosa: 'Lavoro a parete con molle e barra: allungamento della catena posteriore e forza per la schiena. Ottima per chi passa molte ore seduto.' },
+  base: { per: 'Chi non ha mai usato il reformer o riprende dopo una pausa.', cosa: 'Esercizi da sdraiati e seduti, tanto lavoro sul respiro e sull\'allineamento. Si impara a usare il lettino in sicurezza: carrello, poggiapiedi, cinghie.', lavora: 'Addominali profondi, stabilità del bacino, mobilità della colonna, respiro', intensita: 1, molle: 'Da leggere a medie: sostengono il movimento mentre impari' },
+  intermedio: { per: 'Chi controlla bene il carrello, di solito dopo una decina di lezioni.', cosa: 'Serie complete, lavoro in ginocchio e in piedi sul carrello, transizioni più fluide. Il respiro guida il ritmo.', lavora: 'Forza di gambe, glutei e spalle, controllo del tronco, coordinazione', intensita: 2, molle: 'Medie, e a volte leggere apposta: meno resistenza chiede più controllo' },
+  avanzato: { per: 'Chi ha basi solide, su indicazione dell\'istruttore.', cosa: 'Sequenze lunghe senza pause, equilibrio sul carrello in movimento, esercizi di forza e controllo.', lavora: 'Forza e resistenza di tutto il corpo, equilibrio, precisione nei passaggi', intensita: 3, molle: 'Pesanti per la forza, leggerissime per l\'equilibrio' },
+  prenatale: { per: 'Future mamme dal secondo trimestre, con il via libera del ginecologo.', cosa: 'Mobilità del bacino e della schiena, respiro, pavimento pelvico. Dopo il primo trimestre niente esercizi a lungo sdraiate sulla schiena: si lavora sul fianco, sedute o con lo schienale rialzato.', lavora: 'Pavimento pelvico, respiro, mobilità di bacino e schiena, postura', intensita: 1, molle: 'Leggere, intensità moderata, niente apnee' },
+  tower: { per: 'Tutti i livelli.', cosa: 'Lavoro a parete con molle e barra: allungamento della catena posteriore e forza per la schiena. Ottima per chi passa molte ore seduto.', lavora: 'Catena posteriore (schiena, glutei, polpacci), spalle, allungamento attivo', intensita: 2, molle: 'Molle lunghe a parete, dal sostegno alla resistenza' },
 };
+const INTENS = n => `<span class="intens" aria-label="Intensità ${n} su 3">${[1, 2, 3].map(i => `<i${i <= n ? ' class="on"' : ''}></i>`).join('')}</span> ${['', 'bassa', 'media', 'alta'][n]}`;
 const RECENSIONI = [
   ['Dopo dieci lezioni il mal di schiena da ufficio è quasi sparito. Marta corregge ogni dettaglio, senza mai farti sentire in difficoltà.', 'Giulia, 41 anni'],
   ['Ho seguito le lezioni Prenatale con Elena fino all\'ottavo mese. Mi sono sentita seguita, ogni settimana l\'esercizio giusto.', 'Sara, 34 anni'],
@@ -202,7 +220,6 @@ ${PAG.map(([h, t]) => `      <a class="solo-pc" href="${h}"${att(h)}>${t}</a>`).
     <nav aria-label="Pagine">
       <a href="./"${att('index.html')}>Home</a>
 ${PAG.map(([h, t]) => `      <a href="${h}"${att(h)}>${t}</a>`).join('\n')}
-      <a href="domande.html"${att('domande.html')}>Domande</a>
     </nav>
     <div class="menu-tel__giu">
       <a class="btn" href="area/#prova">Prenota la prova gratuita</a>
@@ -221,7 +238,7 @@ ${corpo}
       <div class="footer__col">
         <div><span class="eti">Studio</span><span>Via delle Filande 7, 10126 Torino</span><span>Lun–Ven 7–21:30 · Sab 9–13</span><a href="studio.html">Come arrivare</a></div>
         <div><span class="eti">Contatti</span><span>ciao@centorespiri.it</span><span>+39 011 000 0000</span></div>
-        <div><span class="eti">Sito</span>${PAG.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}<a href="domande.html">Domande</a></div>
+        <div><span class="eti">Sito</span>${PAG.map(([h, t]) => `<a href="${h}">${t}</a>`).join('')}<a href="regala.html">Regala una lezione</a></div>
         <div><span class="eti">Clienti</span><a href="area/">Area clienti</a><a href="app/">App per il telefono</a><a href="studio/">Pannello dello studio</a></div>
         <div><span class="eti">Seguici</span><span class="social">Instagram</span><span class="social">Facebook</span><span class="social">YouTube</span><small class="footer__piccolo">Profili di esempio</small></div>
       </div>
@@ -270,6 +287,12 @@ PAGINE['index.html'] = pagina('index.html', 'Cento Respiri · Pilates reformer a
     </div>
   </div>
 </section>
+<section class="wrap fatti" aria-label="Lo studio in quattro numeri">
+  <div><b>6</b><span>persone al massimo per lezione, un lettino a testa</span></div>
+  <div><b>450+</b><span>ore di formazione di ogni insegnante, su tappetino e grandi attrezzi</span></div>
+  <div><b>10′</b><span>di valutazione alla prima lezione: postura, mobilità, eventuali dolori</span></div>
+  <div><b>1 fisio</b><span>nello staff: Elena segue chi riprende dopo un infortunio</span></div>
+</section>
 <section class="wrap oggi-studio" data-oggi-studio aria-live="polite" hidden></section>
 
 <section class="fondo-carta" id="metodo">
@@ -289,6 +312,17 @@ PAGINE['index.html'] = pagina('index.html', 'Cento Respiri · Pilates reformer a
     </div>
     <div class="r45">${foto('sito-metodo', '(max-width:1000px) 100vw, 640px')}</div>
   </div>
+</section>
+
+<section class="wrap sez come" aria-labelledby="t-come">
+  <div class="testa-riga"><div class="testa"><div class="eti">Come lavoriamo</div><h2 class="h2" id="t-come">Il metodo, in concreto</h2></div>
+    <p class="p2">Sei principi guidano ogni esercizio: <span class="principi"><span>respiro</span><span>centro</span><span>concentrazione</span><span>controllo</span><span>precisione</span><span>fluidità</span></span></p></div>
+  <ol class="come__passi">
+    <li><b>Prima ti guardiamo</b><p>Alla prima lezione dieci minuti di valutazione: come stai in piedi, mobilità di schiena e anche, eventuali dolori o interventi. Non è una visita medica: serve a scegliere livello ed esercizi.</p></li>
+    <li><b>Poi regoliamo le molle</b><p>Sul reformer la resistenza la decidono le molle, e cambia per ogni persona e ogni esercizio. Con sei lettini l'istruttore passa da tutti, corregge e le sposta mentre lavori.</p></li>
+    <li><b>Si sale di livello con dei criteri</b><p>Si passa da Base a Intermedio quando controlli il carrello, tieni il bacino stabile e coordini il respiro: di solito dopo una decina di lezioni. Due a settimana bastano per sentire la differenza in un paio di mesi.</p></li>
+  </ol>
+  <a class="link-freccia" href="domande.html#il-metodo">Le domande sul metodo ›</a>
 </section>
 
 <section class="wrap sez vie" aria-label="Da dove partire">
@@ -332,6 +366,14 @@ ${RECENSIONI.map(([t, chi]) => `    <figure class="rec"><div class="rec__stelle"
 PAGINE['lezioni.html'] = pagina('lezioni.html', 'Lezioni · Cento Respiri', 'Le lezioni di pilates reformer di Cento Respiri a Torino: Base, Intermedio, Avanzato, Prenatale, Tower e lezioni private.', `
 ${testaPagina('Le lezioni', 'Cinque lezioni, un lettino a testa', '50 minuti, al massimo sei persone, sempre su prenotazione. Il lettino lo scegli tu.')}
 <section class="wrap"><div class="r-vera" style="aspect-ratio:16/9;border-radius:24px">${foto('lezioni-alto', '(max-width:1376px) 100vw, 1344px', '', true)}</div></section>
+<section class="wrap sez reformer" aria-labelledby="t-reformer">
+  <div class="testa"><div class="eti">Il reformer in breve</div><h2 class="h2" id="t-reformer">Un lettino, tre parti che contano</h2></div>
+  <div class="reformer__parti">
+    <div><b>Il carrello</b><p>Scorre su binari. Lo spingi o lo trattieni con gambe e braccia: ogni esercizio diventa un controllo del movimento in andata e in ritorno, non solo una spinta.</p></div>
+    <div><b>Le molle</b><p>Collegano il carrello al telaio, dalla molto leggera alla pesante. Più resistenza fa lavorare la forza; meno resistenza rende il carrello instabile e fa lavorare gli addominali profondi. Le regoliamo per ognuno.</p></div>
+    <div><b>Poggiapiedi e cinghie</b><p>Il poggiapiedi si alza e si abbassa, le cinghie si usano con mani o piedi: così lo stesso lettino serve per gambe, braccia, colonna e allungamento.</p></div>
+  </div>
+</section>
 <section class="fondo-carta"><div class="wrap sez trova-sez"><div class="testa"><div class="eti">Non sai da dove partire?</div><h2 class="h2">Quale lezione fa per te?</h2><p class="p2">Tre domande, un tocco ciascuna.</p></div><div class="trova" data-trova aria-live="polite"></div></div></section>
 <section class="wrap sez lez-schede">
 ${Object.entries(DATI.TIPI).map(([k, t]) => {
@@ -341,6 +383,9 @@ ${Object.entries(DATI.TIPI).map(([k, t]) => {
     <dl>
       <div><dt>Per chi</dt><dd>${esc(LEZ_DETTAGLI[k].per)}</dd></div>
       <div><dt>Cosa si fa</dt><dd>${esc(LEZ_DETTAGLI[k].cosa)}</dd></div>
+      <div><dt>Lavora su</dt><dd>${esc(LEZ_DETTAGLI[k].lavora)}</dd></div>
+      <div><dt>Intensità</dt><dd>${INTENS(LEZ_DETTAGLI[k].intensita)}</dd></div>
+      <div><dt>Molle</dt><dd>${esc(LEZ_DETTAGLI[k].molle)}</dd></div>
       <div><dt>Con</dt><dd>${chi.map(c => `<a href="istruttori.html#${c}">${DATI.ISTR[c].nome}</a>`).join(', ')}</dd></div>
       <div><dt>Quando</dt><dd>${righeSettimana(r => r[1] === k, r => r[0])}</dd></div>
     </dl>
@@ -494,11 +539,13 @@ ${STRISCIA.map(id => `    <figure class="r-vera" style="aspect-ratio:3/2">${foto
 
 // --- domande
 PAGINE['domande.html'] = pagina('domande.html', 'Domande frequenti · Cento Respiri', 'Domande frequenti su Cento Respiri, pilates reformer a Torino: prima lezione, cosa portare, certificato, annullamenti, gravidanza, app.', `
-${testaPagina('Domande frequenti', 'Prima di venire', '')}
+${testaPagina('Domande frequenti', 'Prima di venire', 'Il metodo, la prima lezione, le prenotazioni. Risposte brevi, basate su studi e linee guida: niente promesse.')}
+<nav class="wrap salta" aria-label="Temi">${FAQ_GRUPPI.map(([t]) => `<a href="#${t.toLowerCase().replace(/[^a-z]+/g, '-')}">${t}</a>`).join('')}</nav>
 <section class="wrap sez faq" style="padding-top:0">
+${FAQ_GRUPPI.map(([t, d]) => `  <h2 class="faq__tema" id="${t.toLowerCase().replace(/[^a-z]+/g, '-')}">${t}</h2>
   <div class="faq__elenco">
-${FAQ.map(([q, a]) => `    <details><summary>${q}</summary><p>${esc(a)}</p></details>`).join('\n')}
-  </div>
+${d.map(([q, a]) => `    <details><summary>${q}</summary><p>${esc(a)}</p></details>`).join('\n')}
+  </div>`).join('\n')}
   <p class="p2">Non trovi la risposta? Scrivici a ciao@centorespiri.it o chiamaci: rispondiamo in giornata.</p>
 </section>`);
 

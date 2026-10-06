@@ -10,7 +10,7 @@
     base: { nome: 'Reformer Base', liv: 1, livTxt: 'Livello base · molle leggere', desc: 'Per iniziare o ricominciare. Posizioni semplici, tanto lavoro sul respiro, l\'istruttore ti spiega il lettino.' },
     intermedio: { nome: 'Reformer Intermedio', liv: 2, livTxt: 'Livello intermedio · molle medie', desc: 'Serie complete in piedi e in ginocchio sul carrello, controllo del respiro. Per chi ha almeno dieci lezioni alle spalle.' },
     avanzato: { nome: 'Reformer Avanzato', liv: 3, livTxt: 'Livello avanzato · transizioni senza pause', desc: 'Sequenze lunghe, equilibrio e lavoro in piedi. Su indicazione dell\'istruttore.' },
-    prenatale: { nome: 'Prenatale', liv: 1, livTxt: 'Dal 2° trimestre · molle leggere', desc: 'Mobilità, respiro e pavimento pelvico. Serve il via libera del ginecologo.' },
+    prenatale: { nome: 'Prenatale', liv: 1, livTxt: 'Dal 2° trimestre · molle leggere', desc: 'Mobilità, respiro e pavimento pelvico, con il via libera del ginecologo. Dopo il primo trimestre niente esercizi a lungo sdraiate sulla schiena: sul fianco, sedute o con lo schienale rialzato.' },
     tower: { nome: 'Tower', liv: 0, livTxt: 'Tutti i livelli · lavoro a parete', desc: 'Molle e barra a parete: allungamento e forza per la schiena.' },
   };
   // orario settimanale (0 = domenica, chiuso). Lezioni da 50 minuti; lo studio chiude alle 21:30.

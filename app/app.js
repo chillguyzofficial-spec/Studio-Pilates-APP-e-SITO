@@ -765,7 +765,7 @@ V.prova = passo => {
 <main class="vista" tabindex="-1">
   <div class="titolo" style="padding-top:8px"><div class="eti">Prova prenotata</div><h1>Ti aspettiamo</h1></div>
   ${schedaProva(l)}
-  <div class="t16" style="padding:0 8px">Via delle Filande 7, San Salvario. Arriva 10 minuti prima: l'istruttore ti mostra il lettino. Calze antiscivolo: se non le hai, te le diamo noi.</div>
+  <div class="t16" style="padding:0 8px">Via delle Filande 7, San Salvario. Arriva 10 minuti prima: l'istruttore fa una breve valutazione (postura, mobilità, eventuali dolori) e ti mostra il lettino. Calze antiscivolo: se non le hai, te le diamo noi.</div>
   <div class="giu">
     <button class="btn" type="button" data-act="ics">Aggiungi al calendario</button>
     <button class="btn btn--bordo" type="button" data-act="annullaProva">Annulla la prova</button>
@@ -789,7 +789,7 @@ V.prova = passo => {
   ${testa(3, 'provaIndietro')}
   <div class="titolo" style="padding-top:8px"><h1 style="font-size:30px">Confermi la prova?</h1></div>
   ${schedaProva(l)}
-  <div class="t16" style="padding:0 8px">Arriva 10 minuti prima. Servono calze antiscivolo: se non le hai, te le diamo noi.</div>
+  <div class="t16" style="padding:0 8px">Arriva 10 minuti prima per una breve valutazione con l'istruttore. Servono calze antiscivolo: se non le hai, te le diamo noi.</div>
   <div class="giu"><button class="btn" type="button" data-act="confermaProva">Conferma la prova</button><p class="demo-nota" style="margin:0">Demo: nessun dato viene inviato.</p></div>
 </main>`;
   }

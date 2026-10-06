@@ -415,3 +415,32 @@ section[id]{scroll-margin-top:80px}
 /* su telefono il dito sopra la mappa fa scorrere la pagina (Leaflet di suo blocca ogni gesto: touch-action:none) */
 @media (pointer:coarse){.mappa--vera.leaflet-container,.mappa--vera .leaflet-pane,.mappa--vera .leaflet-tile{touch-action:pan-x pan-y pinch-zoom!important}}
 @media (max-width:640px){.mappa.mappa--vera{aspect-ratio:1/1}}
+
+/* ===== contenuti tecnici ===== */
+/* home: lo studio in quattro numeri */
+.fatti{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding-bottom:clamp(28px,4vw,48px)}
+.fatti div{border-top:2px solid var(--barolo);padding-top:12px;display:flex;flex-direction:column;gap:4px}
+.fatti b{font-family:var(--serif);font-weight:400;font-size:clamp(32px,3.2vw,44px);line-height:1}
+.fatti span{font-size:16px;color:var(--testo-2)}
+@media (max-width:900px){.fatti{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 16px}}
+/* home: come lavoriamo */
+.come{display:flex;flex-direction:column;gap:clamp(24px,3vw,36px)}
+.principi{display:inline-flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.principi span{padding:4px 12px;border-radius:14px;background:var(--carta);border:1px solid var(--riga);font-size:15px;color:var(--inchiostro)}
+.come__passi{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px;counter-reset:passo}
+.come__passi li{background:var(--carta);border-radius:24px;padding:26px;display:flex;flex-direction:column;gap:10px;counter-increment:passo}
+.come__passi li::before{content:counter(passo, decimal-leading-zero);font-size:12px;letter-spacing:.14em;color:var(--barolo);font-weight:600}
+.come__passi b{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.15}
+.come__passi p{margin:0;color:var(--testo-2)}
+/* lezioni: il reformer in breve, intensità */
+.reformer{display:flex;flex-direction:column;gap:clamp(20px,3vw,32px)}
+.reformer__parti{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:20px 40px}
+.reformer__parti div{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--riga);padding-top:14px}
+.reformer__parti b{font-size:18px}
+.reformer__parti p{margin:0;color:var(--testo-2)}
+.intens{display:inline-flex;gap:3px;vertical-align:middle;margin-right:6px}
+.intens i{width:16px;height:6px;border-radius:3px;background:var(--riga)}
+.intens i.on{background:var(--barolo)}
+/* domande divise per tema */
+.faq__tema{margin:clamp(20px,3vw,32px) 0 4px;font-family:var(--serif);font-weight:400;font-size:clamp(26px,2.6vw,34px);scroll-margin-top:90px}
+.faq__tema:first-child{margin-top:0}
