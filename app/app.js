@@ -263,18 +263,26 @@ function aggiungiNotifica(tipo, titolo, testo, extra = {}) {
 function puoiPrenotare(l) {
   const ora = Date.now();
   if (l.inizio <= ora) return 'La lezione è già iniziata.';
-  if (l.inizio - oggi0() > FINESTRA * 864e5) return 'Si prenota al massimo 14 giorni prima.';
+  if (giorniDa(l.inizio) > FINESTRA) return 'Si prenota al massimo 14 giorni prima.';
   if (S.pren.some(p => p.id !== l.id && lezione(p.id) && Math.abs(lezione(p.id).inizio - l.inizio) < DURATA * 60e3)) return 'Hai già una lezione a quest\'ora.';
-  if (!mensileAttivo() && !carnetValido()) return 'carnet';
-  return '';
+  if (mensileIl(l.inizio) || carnetIl(l.inizio)) return '';
+  if (mensileAttivo()) return `Il mensile scade il ${fData(daYmd(S.mensile.al))}: per questa data va rinnovato.`;
+  if (rimasti() > 0 && daYmd(S.carnet.al) >= oggi0()) return `Il carnet scade il ${fData(daYmd(S.carnet.al))}: per questa data rinnovalo dalla sezione Carnet.`;
+  return 'carnet';
 }
+// giorni di calendario da oggi (arrotondati: regge anche il cambio dell'ora legale)
+function giorniDa(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); return Math.round((x - oggi0()) / 864e5); }
+// mensile e carnet devono valere nel GIORNO DELLA LEZIONE, non solo oggi
+function mensileIl(d) { return !!S.mensile && giorniDa(daYmd(S.mensile.al)) >= giorniDa(d); }
+function carnetIl(d) { return rimasti() > 0 && giorniDa(daYmd(S.carnet.al)) >= giorniDa(d); }
 // auto: titolo dell'avviso quando prenota l'app da sola (prenotazione fissa, posto preso per te)
 function prenota(l, letto, auto = '') {
   const motivo = puoiPrenotare(l);
   if (motivo) { if (!auto) toast(motivo === 'carnet' ? 'Il carnet è finito: ricaricalo dalla sezione Carnet.' : motivo); return false; }
-  const con = mensileAttivo() ? 'mensile' : 'carnet';
+  const con = mensileIl(l.inizio) ? 'mensile' : 'carnet';
   if (con === 'carnet') S.carnet.usati++;
   S.pren.push({ id: l.id, letto, con, il: Date.now() });
+  S.passate = S.passate.filter(x => x.id !== l.id); // riprenotata: non è più "annullata"
   S.attesa = S.attesa.filter(a => a.id !== l.id);
   if (S.liberati[l.id]) S.liberati[l.id] = S.liberati[l.id].filter(n => n !== letto);
   aggiungiNotifica('conferma', auto || 'Prenotazione confermata', `${Maiusc(fGiorno(l.inizio))}, ${l.ora} · ${TIPI[l.tipo].nome} · lettino ${letto}`, { letto: !auto, id: l.id });
@@ -289,6 +297,7 @@ function annulla(id) {
   if (p.con === 'carnet' && rimborso) S.carnet.usati = Math.max(0, S.carnet.usati - 1);
   S.pren = S.pren.filter(x => x.id !== id);
   (S.liberati[id] = S.liberati[id] || []).push(p.letto);
+  S.passate = S.passate.filter(x => x.id !== id); // una sola voce per lezione, anche se annullata più volte
   S.passate.unshift({ id, stato: 'annullata' });
   salva();
   toast(p.con === 'mensile' ? 'Prenotazione annullata.' : rimborso ? 'Annullata: l\'ingresso è tornato nel carnet.' : 'Annullata: mancavano meno di 12 ore, l\'ingresso è stato scalato.');
@@ -304,7 +313,9 @@ function inAttesa(l) {
 // un posto offerto e rifiutato (o scaduto) va al prossimo in lista: non resta libero
 function passaAlProssimo(a) { if (S.liberati[a.id]) S.liberati[a.id] = S.liberati[a.id].filter(n => n !== a.offerta.letto); }
 // controlla ogni pochi secondi: posti che si liberano, offerte scadute, promemoria 2 ore prima
+let giornoVisto = ymd(new Date());
 function controlla() {
+  if (ymd(new Date()) !== giornoVisto) { giornoVisto = ymd(new Date()); if (!foglioAperto) disegna(false); }
   if (!S.entrato) return;
   const ora = Date.now();
   let cambiato = false;
@@ -352,7 +363,7 @@ function controlla() {
   });
   // le prenotazioni concluse passano nello storico
   const finite = S.pren.filter(p => { const l = lezione(p.id); return !l || l.inizio.getTime() + DURATA * 60e3 < ora; });
-  if (finite.length) { finite.forEach(p => S.passate.unshift({ id: p.id, stato: 'fatta' })); S.pren = S.pren.filter(p => !finite.includes(p)); cambiato = true; }
+  if (finite.length) { finite.forEach(p => { S.passate = S.passate.filter(x => x.id !== p.id); S.passate.unshift({ id: p.id, stato: 'fatta' }); }); S.pren = S.pren.filter(p => !finite.includes(p)); cambiato = true; }
   if (prenotaFisse()) cambiato = true;
   // traguardi raggiunti (10, 25, 50, 100 lezioni…): un avviso, una volta sola
   const pr = progressi();
@@ -401,9 +412,10 @@ function benvenutoWeb() {
     <div class="w-login__form">
       <a class="indietro" href="../" style="margin:0 0 8px">‹ Il sito</a>
       <div class="eti">Area clienti</div>
-      <h1 class="h1">Bentornata in studio</h1>
-      <p class="t16" style="margin:0">Prenota le lezioni, gestisci carnet e lista d'attesa dal computer.</p>
-      <label class="campo">Email<input type="email" id="f-email" value="chiara.bassi@esempio.it" autocomplete="email"></label>
+      <h1 class="h1">Bentornati in studio</h1>
+      <p class="t16" style="margin:0">Prenota le lezioni, gestisci carnet e lista d'attesa.</p>
+      <label class="campo">Email<input type="email" id="f-email" value="chiara.bassi@esempio.it" autocomplete="email" inputmode="email" aria-describedby="f-email-err"></label>
+      <p class="errore" id="f-email-err" role="alert" hidden></p>
       <button class="btn" type="button" data-act="entra">Entra</button>
       <p class="t16 grigio" style="margin:0">Niente password: nella versione vera ti mandiamo un link via email. Demo: entri come Chiara, iscritta di prova, e non viene inviato nulla.</p>
       ${prova ? `<a class="voce" href="#prova/fatto">La tua prova: ${quando(prova.inizio).toLowerCase()} alle ${prova.ora}<span>›</span></a>` : '<a class="link" href="#prova" style="justify-content:flex-start;padding:0">Prima volta? Prenota la prova gratuita</a>'}
@@ -484,7 +496,7 @@ function cartaCarnet(grande) {
 
 V.orario = () => {
   const oggi = oggi0();
-  if (!sel.giorno) sel.giorno = ymd(oggi.getDay() === 0 ? piuGiorni(oggi, 1) : oggi);
+  if (!sel.giorno || daYmd(sel.giorno) < oggi) sel.giorno = ymd(oggi.getDay() === 0 ? piuGiorni(oggi, 1) : oggi);
   const g = daYmd(sel.giorno);
   const lun = piuGiorni(g, -((g.getDay() + 6) % 7));
   const dom = piuGiorni(lun, 6);
@@ -502,12 +514,12 @@ V.orario = () => {
   </div>
   <div class="giorni" role="tablist" aria-label="Giorni"${WEB ? ' hidden' : ''}>
     ${giorni.map(d => {
-      const k = ymd(d), passato = d < oggi, chiuso = d.getDay() === 0, oltre = d - oggi > FINESTRA * 864e5;
+      const k = ymd(d), passato = d < oggi, chiuso = d.getDay() === 0, oltre = giorniDa(d) > FINESTRA;
       return `<button type="button" class="giorno${k === sel.giorno ? ' sel' : ''}${k === ymd(oggi) ? ' oggi' : ''}" role="tab" aria-selected="${k === sel.giorno}" aria-label="${fGiorno(d)}${chiuso ? ', chiuso' : ''}" data-act="giorno" data-g="${k}"${passato || chiuso || oltre ? ' disabled' : ''}><small>${GBREVI[d.getDay()]}</small><b>${d.getDate()}</b><i></i></button>`;
     }).join('')}
   </div>
   ${WEB ? `<div class="w-sett">${giorni.slice(0, 6).map(d => {
-      const passato = d < oggi, oltre = d - oggi > FINESTRA * 864e5, lz = lezioniDel(d);
+      const passato = d < oggi, oltre = giorniDa(d) > FINESTRA, lz = lezioniDel(d);
       return `<section class="w-giorno${ymd(d) === ymd(oggi) ? ' oggi' : ''}${passato ? ' passato' : ''}" aria-label="${fGiorno(d)}"><h2>${GBREVI[d.getDay()]} <b>${d.getDate()}</b></h2>${oltre ? '<p class="vuoto">Si prenota 14 giorni prima.</p>' : lz.map(rigaLezione).join('')}</section>`;
     }).join('')}</div><p class="t16 grigio" style="margin:0">Domenica chiuso. Annulli gratis fino a 12 ore prima.</p>` : `
   <div class="t16" style="padding:0 8px">${Maiusc(fGiorno(g))} · ${lez.length ? lez.length + ' lezioni' : 'studio chiuso'}</div>
@@ -551,6 +563,9 @@ V.lezione = id => {
   else if (st.attesa) corpo = `
     <div class="scheda" style="flex-direction:row;align-items:center;justify-content:space-between"><div class="t16">Sei in lista d'attesa. ${avvisoLista}</div><div class="pos"><b>${st.attesa.pos}ª</b><small>in lista</small></div></div>
     <div class="giu"><button class="btn btn--bordo" type="button" data-act="esciLista" data-id="${id}">Esci dalla lista</button><div class="azioni">${rigaFissa}</div></div>`;
+  else if (st.pieno && puoiPrenotare(l) === 'carnet') corpo = `
+    <div class="riquadro">La lezione è piena e il carnet è finito: ricaricalo per metterti in lista d'attesa.</div>
+    <div class="giu"><a class="btn" href="#carnet">Ricarica il carnet</a></div>`;
   else if (st.pieno) corpo = `
     <div class="riquadro">La lezione è piena. Mettiti in lista d'attesa. ${avvisoLista}</div>
     <div class="giu"><button class="btn" type="button" data-act="lista" data-id="${id}">Mettiti in lista d'attesa</button><div class="azioni">${rigaFissa}</div></div>`;
@@ -592,7 +607,7 @@ V.prenotazioni = () => {
   const ora = Date.now();
   const prossime = S.pren.map(p => ({ p, l: lezione(p.id) })).filter(x => x.l).sort((a, b) => a.l.inizio - b.l.inizio);
   const att = S.attesa.map(a => ({ a, l: lezione(a.id) })).filter(x => x.l).sort((a, b) => a.l.inizio - b.l.inizio);
-  const pass = S.passate.map(x => ({ x, l: lezione(x.id) })).filter(y => y.l && y.l.inizio < ora + 30 * 864e5).slice(0, 6);
+  const pass = S.passate.map(x => ({ x, l: lezione(x.id) })).filter(y => y.l && !S.pren.some(p => p.id === y.x.id)).sort((a, b) => b.l.inizio - a.l.inizio).slice(0, 6);
   return `
 <main class="vista" tabindex="-1">
   <div class="titolo"><h1>Prenotazioni</h1></div>
@@ -848,6 +863,21 @@ addEventListener('hashchange', () => { chiudiFoglio(); chiudiQR(); disegna(true)
 // ---------- azioni ----------
 const A = {
   entra() {
+    // area clienti: serve un'email valida (nella versione vera arriva il link d'accesso a quell'indirizzo)
+    const campo = document.getElementById('f-email');
+    if (campo) {
+      const v = campo.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) {
+        // errore sotto il campo (un avviso volante su telefono copriva il pulsante Entra)
+        campo.setAttribute('aria-invalid', 'true');
+        const er = document.getElementById('f-email-err');
+        er.textContent = v ? 'Questa email non sembra completa: controlla, ad esempio nome@esempio.it.' : 'Scrivi la tua email per entrare.';
+        er.hidden = false; campo.focus();
+        campo.addEventListener('input', () => { campo.removeAttribute('aria-invalid'); er.hidden = true; }, { once: true });
+        return;
+      }
+      S.utente.email = v.slice(0, 80);
+    }
     S.entrato = true; salva();
     let dopo = null; try { dopo = sessionStorage.getItem('cr-dopo'); sessionStorage.removeItem('cr-dopo'); } catch (e) { /* niente */ }
     location.hash = dopo && dopo !== '#benvenuto' ? dopo : '#oggi';
@@ -867,6 +897,9 @@ const A = {
   chiudi() { chiudiFoglio(); },
   lista(d) {
     const l = lezione(d.id); if (!l) return;
+    // in lista solo se poi il posto si può davvero prendere (carnet o mensile validi quel giorno)
+    const motivo = puoiPrenotare(l);
+    if (motivo) { toast(motivo === 'carnet' ? 'Il carnet è finito: ricaricalo per metterti in lista.' : motivo); return; }
     inAttesa(l);
     const a = S.attesa.find(x => x.id === d.id);
     toast(`Sei ${a.pos}ª in lista d'attesa.` + (S.prefs.posto ? ' Ti avvisiamo se si libera un posto.' : ''));
@@ -1014,6 +1047,7 @@ document.addEventListener('click', e => {
   const f = A[b.dataset.act];
   if (f) { e.preventDefault(); f(b.dataset, b); }
 });
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.id === 'f-email') { e.preventDefault(); A.entra(); } });
 document.addEventListener('change', e => {
   const el = e.target.closest('input[data-act], select[data-act]');
   if (el && A[el.dataset.act]) A[el.dataset.act](el.dataset, el);
@@ -1050,7 +1084,9 @@ function chiudiQR() {
 window.CR_MOTORE = {
   get S() { return S; }, ricarica() { const x = carica(); if (x) S = completa(x); }, salva,
   lezioniDel, lezione, stato, altri, hash, ymd, daYmd, piuGiorni, oggi0, fGiorno, fOra, quando, Maiusc,
-  privataDa, aggiungiNotifica, codiceIngresso, POSTI, DURATA, GIORNI, MESI,
+  privataDa, aggiungiNotifica, codiceIngresso, POSTI, DURATA, GIORNI, MESI, FINESTRA,
+  // usate dalle prove automatiche (_build/test/audit.js)
+  puoiPrenotare, prenota, annulla, inAttesa, giorniDa, controlla,
 };
 addEventListener('storage', e => { if (e.key === KEY) { const x = carica(); if (x) S = completa(x); if (app) disegna(false); } });
 if (!app) return;

@@ -221,3 +221,6 @@ body.app{background:var(--sabbia);min-height:100svh}
 .date-fisse div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--sabbia);font-size:16px}
 .date-fisse div:last-child{border-bottom:0}
 .campo-riga select{min-height:44px;border-radius:12px;border:1px solid var(--riga);background:var(--lino);padding:0 10px;font:inherit;font-size:16px;color:var(--inchiostro)}
+/* errore dei campi: sotto il campo, mai sopra i pulsanti */
+.campo input[aria-invalid="true"]{border-color:#B3261E;box-shadow:0 0 0 1px #B3261E}
+.errore{margin:-4px 0 0;font-size:16px;color:#B3261E;font-weight:500}

@@ -48,6 +48,8 @@ const stato = p => p.evaluate(() => JSON.parse(localStorage.getItem('cr-demo-1')
   ok((await stato(p)).prefs.letto === 6, 'profilo: lettino preferito salvato');
   // trova una lezione libera con il 6 libero
   await p.goto(base + 'app/#orario'); await p.waitForTimeout(200);
+  // si parte da domani: una lezione di stasera fra meno di un'ora non entra nella prenotazione fissa (scelta voluta)
+  await p.locator('.giorno:not([disabled]):not(.sel)').first().click(); await p.waitForTimeout(150);
   let trovata = null;
   for (let t = 0; t < 14 && !trovata; t++) {
     const righe = p.locator('.lez:not([disabled]):has(.posti b)');

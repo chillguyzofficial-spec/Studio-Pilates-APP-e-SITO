@@ -11,8 +11,9 @@ const fra = min => min < 60 ? `tra ${min} min` : `tra ${Math.floor(min / 60)} h$
 function statoRiga(l) {
   const st = M.stato(l.id), ora = Date.now(), fine = l.inizio.getTime() + M.DURATA * 60e3;
   if (l.inizio <= ora && fine > ora) return { t: 'in corso', c: 'grigio' };
-  if (st.mia) return { t: `la tua lezione · lettino ${st.mia.letto}`, c: 'tua' };
-  if (st.pieno) return { t: 'piena · lista d\'attesa', c: 'piena' };
+  // "la tua lezione" solo per chi è entrato nell'area clienti o nell'app (non per un visitore qualsiasi)
+  if (st.mia && M.S.entrato) return { t: `la tua lezione · lettino ${st.mia.letto}`, c: 'tua' };
+  if (st.pieno || st.liberi <= 0) return { t: 'piena · lista d\'attesa', c: 'piena' };
   return { t: `${st.liberi} post${st.liberi === 1 ? 'o libero' : 'i liberi'}`, c: st.liberi <= 2 ? 'pochi' : 'liberi' };
 }
 
