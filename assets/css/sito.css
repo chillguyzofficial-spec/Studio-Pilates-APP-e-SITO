@@ -1,0 +1,261 @@
+/* Cento Respiri — sito pubblico (una pagina, stessa struttura su telefono e PC) */
+.wrap{max-width:1376px;margin:0 auto;padding-left:clamp(16px,3vw,48px);padding-right:clamp(16px,3vw,48px)}
+.sez{padding-top:clamp(56px,8vw,120px);padding-bottom:clamp(56px,8vw,120px)}
+.fondo-carta{background:var(--carta)}
+.fondo-sabbia{background:var(--sabbia)}
+.h2{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(32px,4vw,56px);line-height:1.05;text-wrap:balance}
+.testa{display:flex;flex-direction:column;gap:14px}
+.testa-riga{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px 48px}
+.p-grande{margin:0;font-size:clamp(17px,1.4vw,20px);color:var(--testo-2);text-wrap:pretty}
+.p2{margin:0;color:var(--testo-2)}
+
+/* pulsanti */
+.btn{min-height:58px;padding:0 28px;border-radius:29px;background:var(--barolo);color:var(--carta);display:flex;align-items:center;justify-content:center;text-align:center;font-size:17px;font-weight:600;text-decoration:none;transition:background .2s}
+.btn:hover{background:#561f22;color:var(--carta)}
+.btn--chiaro{background:var(--carta);color:var(--barolo)}
+.btn--chiaro:hover{background:#fff;color:var(--barolo)}
+
+/* header */
+.header{position:sticky;top:0;z-index:20;background:var(--lino)}
+.header .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:12px;padding-bottom:12px}
+.logo{display:flex;align-items:center;gap:12px;color:var(--inchiostro);text-decoration:none}
+.logo svg{width:36px;height:36px;flex:none}
+.logo b{font-family:var(--serif);font-weight:400;font-size:19px;letter-spacing:.16em;white-space:nowrap}
+.header nav{display:flex;align-items:center;gap:clamp(16px,2.4vw,32px);font-size:16px;font-weight:500}
+.header nav a{color:var(--inchiostro);text-decoration:none;min-height:44px;display:flex;align-items:center}
+.header nav a:hover{color:var(--barolo)}
+.header nav .solo-pc{display:none}
+.accedi{padding:0 18px;border:1.5px solid var(--inchiostro);border-radius:22px}
+@media (min-width:1240px){.header nav .solo-pc{display:flex}.menu-btn{display:none!important}}
+.header nav a.attiva{color:var(--barolo)}
+.header nav a.solo-pc{position:relative}
+.header nav a.solo-pc.attiva::after{content:"";position:absolute;left:0;right:0;bottom:8px;height:2px;border-radius:1px;background:var(--barolo)}
+@media (max-width:360px){.logo b{font-size:16px;letter-spacing:.12em}}
+
+/* apertura */
+.apertura__foto{aspect-ratio:2304/1008;border-radius:28px;overflow:hidden} /* proporzione vera della foto: niente tagli */
+.apertura__foto .foto{object-position:50% 50%}
+.apertura__sotto{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px 48px;padding:24px 0 clamp(48px,7vw,96px)}
+.apertura h1{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(36px,5.6vw,80px);line-height:1.02;max-width:15ch;text-wrap:balance}
+.apertura__cta{display:flex;flex-direction:column;gap:12px;flex:1 1 300px;max-width:420px}
+.apertura__cta div{font-size:16px;color:var(--testo-2)}
+/* su telefono la foto d'apertura diventa verticale (4:5) e il titolo resta visibile sotto */
+@media (max-width:640px){.apertura__foto{margin:0 calc(-1 * clamp(16px,3vw,48px));border-radius:0}.apertura__sotto{padding-top:18px;gap:16px}}
+
+/* il metodo */
+.metodo{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:clamp(32px,5vw,80px);align-items:center}
+.metodo__testo{display:flex;flex-direction:column;gap:20px}
+.battiti{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.battiti__barre{display:flex;align-items:flex-end;gap:2px;height:40px}
+.battiti__barre span{flex:1;border-radius:1px;background:#B8AC98;height:55%}
+.battiti__barre span.f{height:40%}
+.battiti__barre span.r{height:100%;background:var(--barolo)}
+.battiti__dida{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-3)}
+.r45{aspect-ratio:4/5;border-radius:24px;overflow:hidden}
+
+/* lezioni */
+.lezioni{display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)}
+.lezioni .p2{max-width:440px}
+.lezioni__foto{aspect-ratio:3/2;border-radius:24px;overflow:hidden}
+.lezioni__elenco{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:0 32px;border-top:1px solid var(--riga);margin:0;padding:0;list-style:none}
+.lezioni__elenco li{display:flex;flex-direction:column;gap:8px;padding:22px 0;border-bottom:1px solid var(--riga)}
+.lezioni__elenco .riga{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.lezioni__elenco h3{margin:0;font-family:var(--serif);font-weight:400;font-size:26px;line-height:1.1}
+.lezioni__elenco .liv{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-3);white-space:nowrap}
+.lezioni__elenco p{margin:0;font-size:16px;color:var(--testo-2);text-wrap:pretty}
+
+/* istruttori */
+.istruttori{display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)}
+.istruttori__griglia{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:clamp(28px,3vw,40px)}
+.istr{display:flex;flex-direction:column;gap:12px}
+.istr .r45{border-radius:20px}
+.istr h3{margin:4px 0 0;font-family:var(--serif);font-weight:400;font-size:28px;line-height:1.1}
+.istr .ruolo{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--testo-2)}
+.istr p{margin:0;font-size:16px;color:var(--testo-2)}
+
+/* prezzi */
+.prezzi{display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)}
+.prezzi__griglia{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
+.prezzo{background:var(--carta);border-radius:24px;padding:28px;display:flex;flex-direction:column;gap:10px}
+.prezzo h3{margin:0;font-size:18px;font-weight:600}
+.prezzo .cifra{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px}
+.prezzo .cifra b{font-family:var(--serif);font-weight:400;font-size:56px;line-height:1}
+.prezzo .cifra span{font-size:16px;color:var(--testo-3)}
+.prezzo p{margin:0;font-size:16px;color:var(--testo-2)}
+.prezzo .nota{font-size:16px;color:var(--testo-3);border-top:1px solid var(--sabbia);padding-top:10px;margin-top:auto}
+.prezzo--prova{background:var(--barolo);color:var(--carta)}
+.prezzo--prova p{color:#F0E4DF;flex:1}
+.prezzo--prova .btn{margin-top:12px;min-height:56px}
+
+/* lo studio */
+.studio{display:flex;flex-direction:column;gap:24px;padding-bottom:clamp(56px,8vw,120px)}
+.studio__foto{aspect-ratio:3/2;border-radius:24px;overflow:hidden}
+.studio .testa-riga .p-grande{max-width:520px}
+
+/* dove siamo */
+.dove{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(32px,5vw,80px)}
+.mappa{aspect-ratio:3/2;border-radius:24px;overflow:hidden;background:#EAE2D4}
+.mappa svg{display:block;width:100%;height:100%}
+.dove__info{display:flex;flex-direction:column;gap:24px}
+.orari{display:flex;flex-direction:column;margin:0}
+.orari div{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-top:1px solid var(--riga)}
+.orari{margin-top:0}
+.orari div:last-child{border-bottom:1px solid var(--riga);color:var(--testo-3)}
+.orari dt,.orari dd{margin:0}
+
+/* faq */
+.faq{max-width:960px;display:flex;flex-direction:column;gap:28px}
+.faq__elenco{border-top:1px solid var(--riga)}
+.faq details{border-bottom:1px solid var(--riga)}
+.faq summary{list-style:none;cursor:pointer;min-height:64px;display:flex;justify-content:space-between;align-items:center;gap:16px;font-size:18px;font-weight:600;padding:10px 0}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'+';color:var(--barolo);font-size:26px;font-weight:400;line-height:1;transition:transform .2s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin:0;padding:0 0 20px;color:var(--testo-2);max-width:680px}
+
+/* footer */
+.footer{background:var(--inchiostro);color:var(--lino)}
+.footer .wrap{padding-top:clamp(48px,6vw,80px);padding-bottom:32px;display:flex;flex-direction:column;gap:40px}
+.footer__alto{display:flex;flex-wrap:wrap;justify-content:space-between;gap:32px}
+.footer .logo{color:var(--lino)}
+.footer .logo svg{width:48px;height:48px}
+.footer .logo b{font-size:22px}
+.footer__col{display:flex;flex-wrap:wrap;gap:24px 56px;font-size:16px}
+.footer__col div{display:flex;flex-direction:column;gap:6px}
+.footer__col .eti{color:#B8AC98;font-weight:500}
+.footer__col a{color:var(--lino)}
+.footer__nota{border-top:1px solid var(--testo-2);padding-top:20px;font-size:16px;color:#B8AC98}
+
+/* striscia foto dello studio: scorre in orizzontale, frecce e contatore */
+.striscia{display:flex;flex-direction:column;gap:14px}
+.striscia__track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.striscia__track::-webkit-scrollbar{display:none}
+.striscia__item{margin:0;flex:0 0 min(86%,640px);aspect-ratio:3/2;border-radius:20px;overflow:hidden;scroll-snap-align:start}
+.striscia__ctrl{display:flex;align-items:center;justify-content:flex-end;gap:12px;font-size:16px;color:var(--testo-2)}
+.striscia__ctrl button{width:48px;height:48px;border-radius:50%;border:1.5px solid var(--inchiostro);background:transparent;font-size:24px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding-bottom:3px}
+.striscia__ctrl button:disabled{opacity:.3;cursor:default}
+.striscia__ctrl span{min-width:52px;text-align:center}
+
+/* orario della settimana: giorni a tocco, ogni lezione apre la sua scheda nell'app */
+.orario{display:flex;flex-direction:column;gap:clamp(24px,3vw,36px)}
+.orario .p2{max-width:440px}
+.orario__giorni{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+.orario__giorni button{min-height:56px;border-radius:16px;border:1px solid var(--sabbia);background:var(--lino);font-size:16px;font-weight:600;color:var(--inchiostro);cursor:pointer;padding:0 4px}
+.orario__giorni button[aria-selected="true"]{background:var(--barolo);border-color:var(--barolo);color:var(--carta)}
+.solo-largo{display:none}
+@media (min-width:700px){.solo-largo{display:inline}.solo-tel{display:none}}
+.orario__lista{display:flex;flex-direction:column;border-top:1px solid var(--riga)}
+.orario__riga{display:grid;grid-template-columns:72px 1fr auto;align-items:center;gap:12px;min-height:72px;padding:12px 4px;border-bottom:1px solid var(--riga);color:var(--inchiostro);text-decoration:none;transition:background .15s}
+.orario__riga:hover{background:var(--lino)}
+.orario__riga b{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1}
+.orario__riga .cosa{display:flex;flex-direction:column;gap:2px;min-width:0}
+.orario__riga strong{font-size:17px;font-weight:600}
+.orario__riga .cosa span{font-size:16px;color:var(--testo-3)}
+.orario__riga .vai{font-size:16px;font-weight:600;color:var(--barolo);white-space:nowrap}
+@media (max-width:380px){.orario__riga{grid-template-columns:60px 1fr}.orario__riga .vai{display:none}}
+.orario__nota{max-width:none!important}
+
+/* menu da telefono: pulsante "Menu" e pannello a tutta pagina sotto la testata */
+.menu-btn{min-height:44px;padding:0 18px;border-radius:22px;border:0;background:var(--inchiostro);color:var(--lino);font-size:16px;font-weight:600;cursor:pointer}
+.menu-btn[aria-expanded="true"]{background:var(--barolo)}
+.menu-tel{position:fixed;left:0;right:0;top:var(--alto-testata,68px);bottom:0;z-index:19;background:var(--lino);overflow-y:auto;padding:8px clamp(16px,3vw,48px) calc(env(safe-area-inset-bottom) + 24px);display:flex;flex-direction:column;gap:24px;border-top:1px solid var(--riga)}
+.menu-tel nav{display:flex;flex-direction:column;align-items:stretch;gap:0}
+.menu-tel nav a{min-height:60px;display:flex;align-items:center;border-bottom:1px solid var(--riga);font-family:var(--serif);font-size:28px;color:var(--inchiostro);text-decoration:none}
+.menu-tel__giu{display:flex;flex-direction:column;gap:14px}
+.menu-tel__link{display:flex;flex-wrap:wrap;gap:8px 24px;font-size:16px;font-weight:500}
+.menu-tel__link a{min-height:44px;display:flex;align-items:center}
+@media (max-width:360px){.accedi{padding:0 12px}.menu-btn{padding:0 14px}}
+
+/* "Respira con noi": la barra dei cento battiti si riempie al ritmo del Cento */
+.battiti__riga{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 16px}
+.battiti__btn{min-height:44px;padding:0 18px;border-radius:22px;border:1.5px solid var(--barolo);background:transparent;color:var(--barolo);font-size:16px;font-weight:600;cursor:pointer}
+.battiti__btn:hover{background:var(--barolo);color:var(--carta)}
+.battiti__barre span{transition:background .25s,transform .25s;transform-origin:bottom}
+.battiti.va .battiti__barre span{background:var(--riga)}
+.battiti.va .battiti__barre span.r{background:#C9B9B2}
+.battiti.va .battiti__barre span.fatto{background:var(--barolo)}
+.battiti.va .battiti__barre span.ora{transform:scaleY(1.35)}
+.battiti.va .battiti__dida{color:var(--barolo);font-weight:600}
+
+/* orario vivo: lezioni di oggi già passate spente, la prossima con "tra N min" */
+.orario__riga.passata b,.orario__riga.passata strong,.orario__riga.passata .cosa span{color:var(--testo-3)}
+.orario__riga.passata b{text-decoration:line-through;text-decoration-thickness:1px}
+.orario__riga.passata .vai{color:var(--testo-3);font-weight:500}
+.orario__riga .tra{display:inline-block;margin-left:8px;padding:2px 10px;border-radius:12px;background:var(--barolo);color:var(--carta);font-size:12px;font-weight:600;letter-spacing:.04em;vertical-align:middle;font-family:var(--sans)}
+/* telefono: in testata solo logo e Menu; "Accedi" è dentro il menu */
+@media (max-width:640px){.header .accedi{display:none}}
+.btn--bordo{background:transparent;color:var(--inchiostro);border:1.5px solid var(--inchiostro)}
+.btn--bordo:hover{background:var(--carta);color:var(--inchiostro)}
+.orario__riga .cosa .tra{color:var(--carta);font-size:12px}
+
+/* popup "Scarica l'app" in basso a sinistra: piccolo, chiudibile, mai sopra il menu */
+.pop-app{position:fixed;left:16px;bottom:calc(env(safe-area-inset-bottom) + 16px);z-index:15;max-width:min(360px,calc(100vw - 32px));background:var(--carta);border:1px solid var(--riga);border-radius:20px;box-shadow:0 18px 40px -18px rgba(43,38,32,.45);display:flex;align-items:center;gap:12px;padding:10px 8px 10px 10px;animation:pop-entra .35s ease}
+@keyframes pop-entra{from{opacity:0;transform:translateY(12px)}}
+@media (prefers-reduced-motion:reduce){.pop-app{animation:none}}
+.pop-app__testo{display:flex;align-items:center;gap:12px;color:var(--inchiostro);text-decoration:none;min-width:0;flex:1}
+.pop-app__icona{width:48px;height:48px;border-radius:12px;background:var(--barolo);display:flex;align-items:center;justify-content:center;flex:none}
+.pop-app__icona svg{width:36px;height:36px}
+.pop-app__testo b{display:block;font-size:16px;font-weight:600}
+.pop-app__testo small{display:block;font-size:14px;line-height:1.3;color:var(--testo-2)}
+.pop-app__x{width:40px;height:40px;flex:none;border:0;background:transparent;border-radius:50%;font-size:16px;color:var(--testo-3);cursor:pointer}
+.pop-app__x:hover{background:var(--sabbia)}
+.pop-app__qr{display:none}
+.solo-mouse{display:none!important}
+/* PC con mouse: QR da inquadrare al posto dell'icona */
+@media (hover:hover) and (pointer:fine){
+  .pop-app__qr{display:block;width:84px;height:84px;flex:none;background:#fff;border-radius:10px;padding:4px}
+  .pop-app__qr svg{display:block;width:100%;height:100%}
+  .pop-app__icona{display:none}
+  .solo-tocco{display:none!important}.solo-mouse{display:block!important}
+}
+
+/* la prima volta: tre passi */
+.prima{display:flex;flex-direction:column;gap:clamp(28px,4vw,48px)}
+.passi3{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:clamp(20px,3vw,40px)}
+.passi3 li{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--riga);padding-top:20px}
+.passi3 b{font-family:var(--serif);font-weight:400;font-size:64px;line-height:.9;color:var(--barolo)}
+.passi3 h3{margin:0;font-size:20px;font-weight:600}
+.passi3 p{margin:0;color:var(--testo-2)}
+
+/* lezione privata, sotto ai prezzi */
+.privata{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px 48px;align-items:center;background:var(--carta);border-radius:24px;padding:clamp(22px,3vw,36px)}
+.h3{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(26px,2.6vw,34px);line-height:1.1}
+.privata__prezzi{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px 36px}
+.privata__prezzi div{display:flex;flex-direction:column;gap:2px}
+.privata__prezzi span{font-size:16px;color:var(--testo-3)}
+.privata__prezzi b{font-family:var(--serif);font-weight:400;font-size:44px;line-height:1}
+.privata__prezzi small{font-size:14px;color:var(--testo-3)}
+.link-freccia{min-height:44px;display:inline-flex;align-items:center;font-size:17px;font-weight:600;text-decoration:none}
+.link-freccia:hover{text-decoration:underline}
+
+/* regala una lezione */
+.regala{display:flex;flex-direction:column;gap:clamp(22px,3vw,32px)}
+.regala .p2{max-width:520px}
+.regala__scelte{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px}
+.regala__scelte button{text-align:left;display:flex;flex-direction:column;gap:4px;padding:20px;border-radius:20px;border:1.5px solid var(--riga);background:var(--carta);color:var(--inchiostro);cursor:pointer}
+.regala__scelte button b{font-size:18px;font-weight:600}
+.regala__scelte button span{font-family:var(--serif);font-size:32px;line-height:1.1}
+.regala__scelte button small{font-size:16px;color:var(--testo-2)}
+.regala__scelte button[aria-checked="true"]{border-color:var(--barolo);box-shadow:inset 0 0 0 1.5px var(--barolo)}
+.regala__form{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px 16px}
+.regala__form label{display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:500}
+.regala__form .largo{grid-column:1/-1}
+.regala__form input,.regala__form textarea{min-height:52px;border-radius:14px;border:1px solid var(--riga);background:var(--carta);padding:12px 14px;font:inherit;font-weight:400;font-size:17px;color:var(--inchiostro);resize:vertical}
+.regala__giu{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
+.regala__giu .btn{width:auto}
+.biglietto{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:start}
+.biglietto__carta{background:var(--barolo);color:var(--lino);border-radius:24px;padding:clamp(24px,4vw,40px);display:flex;flex-direction:column;gap:14px;max-width:560px;width:100%}
+.biglietto__carta svg{width:56px;height:56px}
+.biglietto__carta .eti{color:#E9CFC8}
+.biglietto__carta h3{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(28px,3vw,38px);line-height:1.1}
+.biglietto__carta p{margin:0;color:#F3E6E1}
+.biglietto__codice{font-size:20px;letter-spacing:.14em;font-weight:600;background:rgba(243,238,229,.12);border-radius:12px;padding:10px 14px;align-self:flex-start}
+.biglietto__azioni{display:flex;flex-direction:column;gap:10px}
+.biglietto__azioni button{min-height:48px;padding:0 20px;border-radius:24px;border:1.5px solid var(--inchiostro);background:transparent;font-size:16px;font-weight:600;cursor:pointer}
+@media (max-width:700px){.biglietto{grid-template-columns:1fr}.biglietto__azioni{flex-direction:row;flex-wrap:wrap}}
+/* stampa: solo il biglietto */
+@media print{
+  body *{visibility:hidden}
+  .biglietto__carta,.biglietto__carta *{visibility:visible}
+  .biglietto__carta{position:fixed;left:0;top:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}

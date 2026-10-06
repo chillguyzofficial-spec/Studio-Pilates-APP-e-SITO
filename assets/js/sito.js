@@ -1,0 +1,169 @@
+// Cento Respiri — sito: striscia foto dello studio (frecce + contatore)
+document.querySelectorAll('[data-striscia]').forEach(s => {
+  const track = s.querySelector('.striscia__track'), items = [...track.children];
+  const conta = s.querySelector('[data-conta]'), [prev, next] = s.querySelectorAll('button');
+  const attuale = () => { const x = track.scrollLeft; let i = 0, d = 1e9; items.forEach((el, k) => { const dd = Math.abs(el.offsetLeft - track.offsetLeft - x); if (dd < d) { d = dd; i = k; } }); return i; };
+  const fine = () => track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+  const agg = () => { const i = fine() ? items.length - 1 : attuale(); conta.textContent = (i + 1) + ' / ' + items.length; prev.disabled = track.scrollLeft < 4; next.disabled = fine(); };
+  s.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    const i = Math.max(0, Math.min(items.length - 1, attuale() + +b.dataset.dir));
+    track.scrollTo({ left: items[i].offsetLeft - track.offsetLeft, behavior: 'smooth' });
+  }));
+  track.addEventListener('scroll', () => requestAnimationFrame(agg), { passive: true });
+  addEventListener('resize', agg); agg();
+});
+
+// orario della settimana: si apre sul giorno di oggi; ogni lezione porta alla sua prossima data nell'app
+document.querySelectorAll('[data-orario]').forEach(o => {
+  const tabs = [...o.querySelectorAll('[role=tab]')];
+  const apri = g => tabs.forEach(t => {
+    const on = t.dataset.g === String(g);
+    t.setAttribute('aria-selected', on); t.tabIndex = on ? 0 : -1;
+    document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+  });
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => apri(t.dataset.g));
+    t.addEventListener('keydown', e => {
+      const k = { ArrowRight: 1, ArrowLeft: -1 }[e.key]; if (!k) return;
+      const n = tabs[(i + k + tabs.length) % tabs.length]; apri(n.dataset.g); n.focus();
+    });
+  });
+  const oggi = new Date().getDay();
+  apri(oggi === 0 ? 1 : oggi);
+  const pad = n => String(n).padStart(2, '0');
+  o.querySelectorAll('.orario__riga').forEach(a => {
+    const g = +a.dataset.g, [h, m] = a.dataset.ora.split(':').map(Number);
+    const d = new Date(); d.setHours(h, m, 0, 0);
+    let diff = (g - d.getDay() + 7) % 7;
+    if (diff === 0 && d <= new Date()) diff = 7; // già iniziata oggi: la settimana prossima
+    d.setDate(d.getDate() + diff);
+    a.href = `area/#lezione/${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}_${pad(h)}${pad(m)}`;
+  });
+});
+
+// menu da telefono: pannello sotto la testata, scroll bloccato solo su <html> (sul body romperebbe la testata sticky)
+(() => {
+  const btn = document.querySelector('.menu-btn'), pan = document.getElementById('menu-tel'), head = document.querySelector('.header');
+  if (!btn || !pan) return;
+  const chiudi = (focus) => { pan.hidden = true; btn.setAttribute('aria-expanded', 'false'); btn.textContent = 'Menu'; document.documentElement.style.overflow = ''; if (focus) btn.focus({ preventScroll: true }); };
+  btn.addEventListener('click', () => {
+    if (!pan.hidden) return chiudi(false);
+    document.documentElement.style.setProperty('--alto-testata', head.getBoundingClientRect().bottom + 'px');
+    pan.hidden = false; btn.setAttribute('aria-expanded', 'true'); btn.textContent = 'Chiudi';
+    document.documentElement.style.overflow = 'hidden';
+  });
+  pan.addEventListener('click', e => { if (e.target.closest('a')) chiudi(false); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !pan.hidden) chiudi(true); });
+  addEventListener('resize', () => { if (innerWidth >= 1240 && !pan.hidden) chiudi(false); });
+})();
+
+// menu su PC: si evidenzia la sezione in cui ci si trova
+(() => {
+  const links = [...document.querySelectorAll('.header nav a.solo-pc')];
+  const sez = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+  if (!sez.length || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    links.forEach(a => a.classList.toggle('attiva', a.getAttribute('href') === '#' + e.target.id));
+  }), { rootMargin: '-45% 0px -50% 0px' });
+  sez.forEach(s => io.observe(s));
+})();
+
+// "Respira con noi": cento battiti, cinque inspirando e cinque espirando, mezzo secondo l'uno (si avvia solo a tocco)
+document.querySelectorAll('[data-battiti]').forEach(box => {
+  const barre = [...box.querySelectorAll('.battiti__barre span')], dida = box.querySelector('.battiti__dida'), btn = box.querySelector('.battiti__btn');
+  const testo0 = dida.textContent, btn0 = btn.textContent;
+  let t = null, i = 0;
+  const ferma = (fine) => {
+    clearInterval(t); t = null; box.classList.remove('va');
+    barre.forEach(b => b.classList.remove('fatto', 'ora'));
+    dida.textContent = fine ? 'Cento battiti. Così comincia ogni lezione.' : testo0;
+    btn.textContent = fine ? 'Ancora una volta' : btn0;
+  };
+  const passo = () => {
+    if (i >= barre.length) return ferma(true);
+    barre.forEach((b, k) => { b.classList.toggle('fatto', k <= i); b.classList.toggle('ora', k === i); });
+    const respiro = Math.floor(i / 10) + 1, dentro = i % 10 < 5;
+    dida.textContent = `${dentro ? 'Inspira' : 'Espira'} · respiro ${respiro} di 10 · ${i + 1}/100`;
+    i++;
+  };
+  btn.addEventListener('click', () => {
+    if (t) return ferma(false);
+    i = 0; box.classList.add('va'); btn.textContent = 'Ferma';
+    passo(); t = setInterval(passo, 500);
+  });
+});
+
+// orario vivo: nella giornata di oggi le lezioni passate si spengono, la prossima dice tra quanto inizia
+(() => {
+  const agg = () => {
+    const ora = new Date(), g = ora.getDay();
+    let prossima = null;
+    document.querySelectorAll('.orario__riga').forEach(a => {
+      a.classList.remove('passata'); const v = a.querySelector('.vai'); v.textContent = 'Prenota ›';
+      const tra = a.querySelector('.tra'); if (tra) tra.remove();
+      if (+a.dataset.g !== g) return;
+      const [h, m] = a.dataset.ora.split(':').map(Number), inizio = new Date(); inizio.setHours(h, m, 0, 0);
+      if (inizio <= ora) { a.classList.add('passata'); v.textContent = inizio.getTime() + 50 * 60e3 > ora ? 'In corso' : 'Conclusa'; }
+      else if (!prossima) prossima = { a, min: Math.round((inizio - ora) / 60e3) };
+    });
+    if (prossima) {
+      const s = document.createElement('span'); s.className = 'tra';
+      s.textContent = prossima.min < 60 ? `tra ${prossima.min} min` : `tra ${Math.floor(prossima.min / 60)} h ${prossima.min % 60 ? (prossima.min % 60) + ' min' : ''}`.trim();
+      prossima.a.querySelector('strong').append(s);
+    }
+  };
+  if (document.querySelector('.orario__riga')) { agg(); setInterval(agg, 60e3); }
+})();
+
+// popup "Scarica l'app": dopo l'apertura, chiudibile (non torna per 7 giorni), mai con il menu aperto o con l'app già installata
+(() => {
+  const pop = document.getElementById('pop-app');
+  if (!pop || matchMedia('(display-mode: standalone)').matches || navigator.standalone) return;
+  const KEY = 'cr-pop-app-chiuso', SETTE = 7 * 864e5;
+  try { if (Date.now() - (+localStorage.getItem(KEY) || 0) < SETTE) return; } catch (e) { /* niente memoria: si mostra */ }
+  const qr = pop.querySelector('.pop-app__qr');
+  if (qr && window.qrcode) { try { const q = qrcode(0, 'M'); q.addData(new URL('app/', location.href).href); q.make(); qr.innerHTML = q.createSvgTag({ cellSize: 6, margin: 1, scalable: true }); } catch (e) { /* niente */ } }
+  const menu = document.getElementById('menu-tel'), apertura = document.querySelector('.apertura');
+  let chiuso = false;
+  const aggiorna = () => {
+    if (chiuso) return;
+    const oltre = apertura ? apertura.getBoundingClientRect().bottom < 0 : scrollY > 400;
+    pop.hidden = !oltre || (menu && !menu.hidden);
+  };
+  pop.querySelector('.pop-app__x').addEventListener('click', () => {
+    chiuso = true; pop.hidden = true;
+    try { localStorage.setItem(KEY, String(Date.now())); } catch (e) { /* niente */ }
+  });
+  addEventListener('scroll', () => requestAnimationFrame(aggiorna), { passive: true });
+  if (menu) new MutationObserver(aggiorna).observe(menu, { attributes: true, attributeFilter: ['hidden'] });
+  aggiorna();
+})();
+
+// regala una lezione: scelta, dedica, biglietto con codice (salvato su questo dispositivo per poterlo usare nell'app)
+document.querySelectorAll('[data-regala]').forEach(box => {
+  const scelte = [...box.querySelectorAll('[data-regalo]')], out = box.querySelector('#biglietto');
+  let tipo = scelte[0].dataset.regalo;
+  scelte.forEach(b => b.addEventListener('click', () => { tipo = b.dataset.regalo; scelte.forEach(x => x.setAttribute('aria-checked', x === b)); }));
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  box.querySelector('[data-crea-regalo]').addEventListener('click', () => {
+    const per = box.querySelector('#rg-per').value.trim(), da = box.querySelector('#rg-da').value.trim(), dedica = box.querySelector('#rg-dedica').value.trim();
+    const scelto = scelte.find(b => b.dataset.regalo === tipo);
+    const codice = 'CR-REGALO-' + String(Math.floor(1000 + Math.random() * 9000));
+    try { const l = JSON.parse(localStorage.getItem('cr-regali') || '[]'); l.push({ codice, tipo, per, da, usato: false, il: Date.now() }); localStorage.setItem('cr-regali', JSON.stringify(l)); } catch (e) { /* niente memoria: il biglietto resta valido solo da stampare */ }
+    const marchio = (document.querySelector('.logo svg') || {}).outerHTML || '';
+    out.innerHTML = `<div class="biglietto__carta">${marchio.replace(/#2B2620/g, '#F3EEE5').replace(/#6A2C2E/g, '#F3EEE5')}
+      <div class="eti">Cento Respiri · un regalo per ${esc(per || 'te')}</div>
+      <h3>${esc(scelto.querySelector('b').textContent)}</h3>
+      <p>${esc(scelto.querySelector('small').textContent)}</p>
+      ${dedica ? `<p><i>«${esc(dedica)}»</i></p>` : ''}
+      ${da ? `<p>Da ${esc(da)}</p>` : ''}
+      <div class="biglietto__codice">${codice}</div>
+      <p style="font-size:14px">Si usa nell'area clienti o nell'app, sezione Carnet. Via delle Filande 7, Torino · studio dimostrativo.</p></div>
+      <div class="biglietto__azioni"><button type="button" data-stampa>Stampa</button><button type="button" data-copia="${codice}">Copia il codice</button></div>`;
+    out.hidden = false;
+    out.querySelector('[data-stampa]').addEventListener('click', () => print());
+    out.querySelector('[data-copia]').addEventListener('click', e => { const t = e.currentTarget; (navigator.clipboard ? navigator.clipboard.writeText(codice) : Promise.reject()).then(() => { t.textContent = 'Copiato'; }, () => { t.textContent = codice; }); });
+    out.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+  });
+});

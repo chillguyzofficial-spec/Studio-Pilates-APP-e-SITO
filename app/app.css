@@ -1,0 +1,221 @@
+/* Cento Respiri — app iscritti (PWA). Una colonna da telefono, centrata anche su PC. */
+html{background:var(--sabbia)}
+body.app{background:var(--sabbia);min-height:100svh}
+.app__col{max-width:480px;margin:0 auto;min-height:100svh;background:var(--lino);display:flex;flex-direction:column;position:relative}
+@media (min-width:520px){.app__col{box-shadow:0 0 0 1px var(--riga),0 30px 80px -40px rgba(60,40,20,.35)}}
+.vista{flex:1;display:flex;flex-direction:column;gap:14px;padding:calc(env(safe-area-inset-top) + 16px) 16px 24px}
+.vista>*{flex:none}
+.vista:focus{outline:none}
+
+/* testate */
+.titolo{display:flex;flex-direction:column;gap:4px;padding:0 8px}
+.titolo h1,.h1{margin:0;font-family:var(--serif);font-weight:400;font-size:32px;line-height:1.05}
+.sopra{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--testo-3)}
+.indietro{min-height:44px;display:inline-flex;align-items:center;gap:6px;padding:0 8px;margin:-8px 0 -4px;font-size:16px;font-weight:500;color:var(--barolo);background:none;border:0;cursor:pointer;align-self:flex-start;text-decoration:none}
+.riga-titolo{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:0 8px}
+.passi{display:flex;justify-content:space-between;align-items:center}
+.passi span{font-size:16px;color:var(--testo-3)}
+.barra-passi{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 8px}
+.barra-passi i{height:4px;border-radius:2px;background:var(--riga)}
+.barra-passi i.on{background:var(--barolo)}
+
+/* schede e testi */
+.scheda{background:var(--carta);border-radius:24px;padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.scheda--grande{border-radius:28px;padding:22px}
+.scheda--foto{padding:0;overflow:hidden;gap:0}
+.scheda--foto .dentro{padding:18px 20px 20px;display:flex;flex-direction:column;gap:12px}
+.t16{font-size:16px;line-height:1.45;color:var(--testo-2)}
+.t17b{font-size:17px;font-weight:600}
+.t18b{font-size:18px;font-weight:600;line-height:1.3}
+.grigio{color:var(--testo-3)}
+.serif{font-family:var(--serif);font-weight:400}
+.ora-grande{font-family:var(--serif);font-size:68px;line-height:.9}
+.riquadro{font-size:16px;line-height:1.45;color:var(--testo-2);background:var(--sabbia-2);border-radius:16px;padding:12px 16px}
+.elenco{background:var(--carta);border-radius:20px;padding:2px 18px;display:flex;flex-direction:column}
+.elenco>div{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--sabbia);font-size:16px;min-height:48px}
+.elenco>div:last-child{border-bottom:0}
+.sezione{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--testo-3);padding:8px 8px 0}
+.vuoto{font-size:16px;color:var(--testo-3);padding:4px 8px 8px}
+
+/* foto */
+.fx{overflow:hidden;background:var(--sabbia);flex:none}
+.fx img{width:100%;height:100%;object-fit:cover}
+.fx .ph{width:100%;height:100%}
+.fx--benvenuto{aspect-ratio:3/2;border-radius:28px;width:100%}
+.fx--home{aspect-ratio:3/2}
+.fx--lezione{aspect-ratio:3/2;border-radius:24px}
+.fx--prova{aspect-ratio:3/2;border-radius:24px}
+
+/* pulsanti */
+.btn{min-height:56px;padding:0 24px;border-radius:28px;border:0;background:var(--barolo);color:var(--carta);display:flex;align-items:center;justify-content:center;gap:8px;font-size:17px;font-weight:600;cursor:pointer;text-decoration:none;text-align:center;width:100%;transition:background .15s,transform .1s}
+.btn:active{transform:scale(.985)}
+.btn:hover{background:#561f22;color:var(--carta)}
+.btn--bordo{background:transparent;color:var(--inchiostro);border:1.5px solid var(--inchiostro)}
+.btn--bordo:hover{background:var(--carta);color:var(--inchiostro)}
+.btn--piccolo{min-height:48px;font-size:16px;border-radius:24px}
+.btn:disabled{background:var(--sabbia);color:var(--spento);cursor:default;transform:none}
+.link{min-height:44px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;color:var(--barolo);background:none;border:0;cursor:pointer;text-decoration:none;padding:0 8px}
+.pill{min-height:44px;padding:0 16px;border-radius:22px;border:1px solid var(--riga);background:var(--carta);display:inline-flex;align-items:center;gap:8px;font-size:16px;font-weight:500;cursor:pointer;color:var(--inchiostro);flex:none}
+.pallino{width:8px;height:8px;border-radius:50%;background:var(--barolo)}
+.giu{margin-top:auto;display:flex;flex-direction:column;gap:10px;padding-top:6px}
+
+/* benvenuto */
+.marchio-riga{display:flex;align-items:center;gap:14px}
+.marchio-riga svg{width:52px;height:52px;color:var(--inchiostro);flex:none}
+.marchio-riga svg line[stroke-width="2.2"]{stroke:var(--barolo)}
+.marchio-nome{font-family:var(--serif);font-size:24px;letter-spacing:.16em;line-height:1}
+.frase{font-family:var(--serif);font-size:26px;line-height:1.25;text-wrap:pretty;margin:0}
+.demo-nota{font-size:16px;color:var(--testo-3);text-align:center}
+
+/* home */
+.carnet-mini{display:flex;flex-direction:column;gap:10px}
+.tacche{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+.tacche i{height:6px;border-radius:3px;background:var(--sabbia)}
+.tacche i.on{background:var(--barolo)}
+.tacche--grandi{gap:5px}
+.tacche--grandi i{height:28px;border-radius:6px}
+.dati2{display:grid;grid-template-columns:1fr auto;gap:12px;border-top:1px solid var(--sabbia);padding-top:12px}
+.dati2 b{display:block;font-weight:400;font-size:17px}
+.dati2 .serif{font-size:28px;line-height:1}
+
+/* orario */
+.settimana{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 0 0 8px}
+.settimana .frecce{display:flex;gap:6px}
+.tondo{width:44px;height:44px;border-radius:50%;border:1px solid var(--riga);background:var(--carta);font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;padding-bottom:3px;color:var(--inchiostro)}
+.tondo:disabled{opacity:.35;cursor:default}
+.giorni{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.giorno{height:64px;border-radius:16px;border:1px solid var(--sabbia);background:var(--carta);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;color:var(--inchiostro);padding:0}
+.giorno small{font-size:12px;font-weight:500}
+.giorno b{font-family:var(--serif);font-weight:400;font-size:22px;line-height:1}
+.giorno i{width:4px;height:4px;border-radius:50%;background:transparent}
+.giorno.oggi i{background:var(--barolo)}
+.giorno.sel{background:var(--barolo);border-color:var(--barolo);color:var(--carta)}
+.giorno.sel i{background:var(--carta)}
+.giorno:disabled{background:transparent;color:#A39886;cursor:default}
+.lezioni{display:flex;flex-direction:column;gap:8px}
+.lez{min-height:76px;border-radius:20px;background:var(--carta);padding:12px 14px 12px 16px;display:grid;grid-template-columns:62px 1fr auto;align-items:center;gap:10px;border:1.5px solid transparent;text-align:left;cursor:pointer;width:100%;color:var(--inchiostro)}
+.lez.mia{border-color:var(--barolo)}
+.lez:disabled{opacity:.5;cursor:default}
+.lez .ora{font-family:var(--serif);font-size:24px;line-height:1;display:flex;flex-direction:column}
+.lez .ora small{font-family:var(--sans);font-size:12px;color:var(--testo-3);margin-top:4px}
+.lez .cosa{display:flex;flex-direction:column;gap:2px}
+.lez .cosa b{font-size:16px;font-weight:600}
+.lez .cosa span{font-size:16px;color:var(--testo-3)}
+.lez .posti{display:flex;flex-direction:column;align-items:flex-end;text-align:right}
+.lez .posti b{font-size:17px;font-weight:600;white-space:nowrap}
+.lez .posti span{font-size:12px;color:var(--testo-3)}
+.badge{min-height:44px;padding:4px 12px;border-radius:22px;border:1.5px solid var(--barolo);color:var(--barolo);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.15;text-align:center}
+.badge small{font-size:12px}
+.badge b{font-size:14px;font-weight:600}
+.badge--pieno{background:var(--barolo);color:var(--carta)}
+
+/* scheda lezione */
+.livello{display:flex;gap:8px;align-items:center;font-size:16px}
+.livello span{display:flex;gap:3px}
+.livello i{width:16px;height:6px;border-radius:3px;background:var(--riga)}
+.livello i.on{background:var(--barolo)}
+.istruttore{display:flex;align-items:center;gap:12px}
+.avatar{width:56px;height:56px;border-radius:50%;background:var(--sabbia);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:22px;flex:none;color:var(--inchiostro)}
+.lettini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.lettino{height:52px;border-radius:14px;border:1.5px solid var(--inchiostro);background:transparent;display:flex;align-items:center;justify-content:center;gap:6px;font-size:16px;cursor:pointer;color:var(--inchiostro)}
+.lettino b{font-family:var(--serif);font-weight:400;font-size:20px}
+.lettino:disabled{background:var(--sabbia);border-color:var(--sabbia);color:var(--spento);cursor:default}
+.lettino.scelto{background:var(--barolo);border-color:var(--barolo);color:var(--carta);font-weight:600}
+.lettino.tuo{background:var(--barolo);border-color:var(--barolo);color:var(--carta);font-weight:600;cursor:default}
+
+/* prenotazioni */
+.pren{background:var(--carta);border-radius:20px;padding:14px 14px 14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.pren>div:first-child{display:flex;flex-direction:column;gap:2px;min-width:0}
+.pren .quando{font-size:16px;color:var(--barolo);font-weight:600}
+.pren .quando.grigio{color:var(--testo-2)}
+.pos{display:flex;flex-direction:column;align-items:center;justify-content:center;width:72px;height:72px;border-radius:50%;border:1.5px solid var(--barolo);color:var(--barolo);flex:none}
+.pos b{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1}
+.pos small{font-size:12px}
+
+/* abbonamento e QR */
+.numerone{font-family:var(--serif);font-size:96px;line-height:.85}
+.qr-vista{position:fixed;inset:0;z-index:50;background:#fff;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top) + 12px) 16px calc(env(safe-area-inset-bottom) + 24px)}
+.qr-vista .chiudi{align-self:flex-end;min-height:44px;padding:0 18px;border-radius:22px;background:var(--lino);border:0;font-size:16px;font-weight:600;cursor:pointer}
+.qr-vista .centro{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;padding-bottom:40px}
+.qr-box svg{display:block;width:min(300px,78vw);height:auto}
+.codice{font-size:12px;letter-spacing:.2em;color:var(--testo-3)}
+
+/* notifiche */
+.avviso{background:var(--carta);border-radius:24px;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.avviso .testa{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.avviso .tipo{display:flex;align-items:center;gap:8px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--barolo);font-weight:600}
+.avviso.letto .tipo{color:var(--testo-3)}
+.avviso.letto .pallino{background:transparent}
+.due{display:grid;grid-template-columns:1.3fr 1fr;gap:8px;margin-top:6px}
+
+/* profilo */
+.utente{display:flex;align-items:center;gap:14px;padding:0 8px 4px}
+.utente .avatar{width:60px;height:60px;font-size:24px}
+.utente>div:not(.avatar){display:flex;flex-direction:column;flex:1;min-width:0}
+.utente .nome{font-family:var(--serif);font-size:26px;line-height:1.1}
+.utente .mail{font-size:16px;color:var(--testo-3);overflow-wrap:anywhere}
+.carica{min-height:52px;border-radius:14px;border:1.5px dashed #B8AC98;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;color:var(--barolo);cursor:pointer;position:relative;text-align:center;padding:0 12px}
+.carica input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.interr{position:relative;width:52px;height:32px;flex:none}
+.interr input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer;z-index:1;width:100%;height:100%}
+.interr span{position:absolute;inset:0;border-radius:16px;background:var(--riga);transition:background .2s}
+.interr span::after{content:'';position:absolute;left:3px;top:3px;width:26px;height:26px;border-radius:50%;background:var(--carta);transition:transform .2s}
+.interr input:checked+span{background:var(--barolo)}
+.interr input:checked+span::after{transform:translateX(20px)}
+.interr input:focus-visible+span{outline:2px solid var(--barolo);outline-offset:3px}
+.voce{background:var(--carta);border-radius:20px;min-height:56px;padding:0 18px;display:flex;justify-content:space-between;align-items:center;font-size:16px;font-weight:600;color:var(--inchiostro);text-decoration:none;border:0;width:100%;cursor:pointer;text-align:left}
+.voce span{color:var(--barolo)}
+
+/* installa */
+.schede2{display:grid;grid-template-columns:1fr 1fr;background:var(--sabbia);border-radius:24px;padding:4px}
+.schede2 button{height:44px;border-radius:20px;border:0;background:transparent;font-size:16px;font-weight:500;color:var(--testo-2);cursor:pointer}
+.schede2 button[aria-selected="true"]{background:var(--carta);font-weight:600;color:var(--inchiostro)}
+.passo{background:var(--carta);border-radius:20px;padding:12px;display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center}
+.passo>div:last-child{display:flex;flex-direction:column;gap:2px;font-size:16px;line-height:1.35}
+.passo .n{font-family:var(--serif);font-size:20px;color:var(--barolo)}
+.tel{width:64px;height:100px;border-radius:12px;border:1.5px solid var(--inchiostro);position:relative;background:var(--lino);overflow:hidden}
+.tel i{position:absolute;display:block;border-radius:3px;background:var(--riga)}
+.tel i.b{background:var(--barolo)}
+
+/* prova gratuita */
+.scelta{min-height:72px;border-radius:20px;background:var(--carta);border:1px solid var(--riga);padding:12px 20px;display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer;width:100%;text-align:left;color:var(--inchiostro)}
+.scelta>div{display:flex;flex-direction:column}
+.scelta b{font-size:17px;font-weight:600}
+.scelta span{font-size:16px;color:var(--testo-3)}
+.scelta .fr{color:var(--barolo);font-size:22px}
+.scelta .dx{display:flex;flex-direction:column;align-items:flex-end}
+.scelta .dx b{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1}
+.scelta .dx span{font-size:12px}
+
+/* barra in basso */
+.nav{position:sticky;bottom:0;z-index:10;background:var(--carta);border-top:1px solid var(--riga);display:grid;grid-template-columns:repeat(5,1fr);padding:0 0 env(safe-area-inset-bottom)}
+.nav a{min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:12px;font-weight:500;color:var(--testo-3);text-decoration:none;position:relative}
+.nav a::before{content:'';width:20px;height:3px;border-radius:2px;background:transparent}
+.nav a[aria-current="page"]{color:var(--barolo)}
+.nav a[aria-current="page"]::before{background:var(--barolo)}
+.nav .num{position:absolute;top:8px;left:calc(50% + 14px);min-width:18px;height:18px;border-radius:9px;background:var(--barolo);color:var(--carta);font-size:12px;line-height:18px;text-align:center;padding:0 4px}
+
+/* finestra dal basso */
+.velo{position:fixed;inset:0;z-index:40;background:rgba(43,38,32,.5);display:flex;align-items:flex-end;justify-content:center;animation:appare .2s ease}
+.foglio{width:100%;max-width:480px;max-height:92svh;overflow:auto;background:var(--carta);border-radius:32px 32px 0 0;padding:28px 24px calc(env(safe-area-inset-bottom) + 28px);display:flex;flex-direction:column;gap:14px;animation:sale .25s ease}
+.foglio h2{margin:0;font-family:var(--serif);font-weight:400;font-size:30px;line-height:1.1}
+.campo{display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:500}
+.campo input,.campo select{min-height:52px;border-radius:14px;border:1px solid var(--riga);background:var(--lino);padding:0 14px;font:inherit;font-weight:400;color:var(--inchiostro);font-size:17px;width:100%}
+@keyframes appare{from{opacity:0}}
+@keyframes sale{from{transform:translateY(40px);opacity:.4}}
+@media (prefers-reduced-motion:reduce){.velo,.foglio{animation:none}}
+
+/* avviso breve */
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 84px);z-index:60;max-width:min(440px,calc(100vw - 32px));background:var(--inchiostro);color:var(--carta);border-radius:16px;padding:14px 18px;font-size:16px;line-height:1.4;box-shadow:0 16px 40px -16px rgba(0,0,0,.4)}
+
+/* progressi: quadrante a cento tacche col numero di lezioni al centro */
+.progressi{flex-direction:row;align-items:center;gap:16px}
+.anello{position:relative;width:76px;height:76px;flex:none}
+.anello svg{width:100%;height:100%}
+.anello b{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:400;font-size:24px}
+/* righe azione secondarie (calendario, prenotazione fissa) */
+.azioni{display:flex;flex-wrap:wrap;justify-content:center;gap:0 8px}
+.date-fisse{display:flex;flex-direction:column;background:var(--lino);border-radius:16px;padding:2px 16px}
+.date-fisse div{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--sabbia);font-size:16px}
+.date-fisse div:last-child{border-bottom:0}
+.campo-riga select{min-height:44px;border-radius:12px;border:1px solid var(--riga);background:var(--lino);padding:0 10px;font:inherit;font-size:16px;color:var(--inchiostro)}

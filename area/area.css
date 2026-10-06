@@ -1,0 +1,58 @@
+/* Cento Respiri — area clienti nel browser (stesso motore dell'app, impaginazione da PC) */
+html,body.web{background:var(--lino)}
+.web .app__col{max-width:none;box-shadow:none;background:var(--lino)}
+.web .vista{width:100%;max-width:820px;margin:0 auto;padding:36px clamp(16px,3vw,40px) 72px;gap:16px}
+.web main[data-v="orario"],.web main[data-v="benvenuto"]{max-width:1240px}
+.web .h1,.web .titolo h1{font-size:clamp(34px,3.4vw,46px)}
+.web .toast{bottom:24px}
+
+/* testata con il menu */
+.w-testa{position:sticky;top:0;z-index:20;background:var(--lino);border-bottom:1px solid var(--riga)}
+.w-testa .in{max-width:1240px;margin:0 auto;padding:10px clamp(16px,3vw,40px);display:flex;align-items:center;gap:20px}
+.w-logo{display:flex;align-items:center;gap:10px;color:var(--inchiostro);text-decoration:none;flex:none}
+.w-logo svg{width:34px;height:34px}
+.w-logo svg line[stroke-width="2.2"]{stroke:var(--barolo)}
+.w-logo span{font-family:var(--serif);font-size:18px;letter-spacing:.16em;white-space:nowrap}
+.w-logo small{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--testo-3);padding-left:10px;border-left:1px solid var(--riga);white-space:nowrap}
+.w-testa nav{display:flex;gap:4px;flex:1;justify-content:center}
+.w-testa nav a{min-height:44px;padding:0 16px;display:flex;align-items:center;border-radius:22px;color:var(--testo-2);text-decoration:none;font-size:16px;font-weight:500;white-space:nowrap}
+.w-testa nav a:hover{color:var(--inchiostro);background:var(--carta)}
+.w-testa nav a[aria-current="page"]{background:var(--carta);color:var(--barolo);font-weight:600}
+.w-dx{display:flex;align-items:center;gap:8px;flex:none}
+/* telefono o finestra stretta: il menu va su una seconda riga e scorre */
+@media (max-width:980px){
+  .w-testa .in{flex-wrap:wrap;row-gap:4px}
+  .w-logo small{display:none}
+  .w-dx{margin-left:auto}
+  .w-testa nav{order:3;flex-basis:100%;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;margin:0 -8px}
+  .w-testa nav::-webkit-scrollbar{display:none}
+}
+@media (max-width:400px){.w-logo span{font-size:15px;letter-spacing:.1em}}
+
+/* orario: la settimana in colonne (lun–sab) */
+.w-sett{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;align-items:start}
+.w-giorno{display:flex;flex-direction:column;gap:8px;min-width:0}
+.w-giorno h2{margin:0 0 2px;padding:10px 12px;border-radius:14px;background:var(--carta);font-family:var(--sans);font-size:16px;font-weight:600;display:flex;align-items:baseline;gap:6px}
+.w-giorno h2 b{font-family:var(--serif);font-weight:400;font-size:22px}
+.w-giorno.oggi h2{background:var(--barolo);color:var(--carta)}
+.w-giorno.passato{opacity:.55}
+.w-giorno .lez{grid-template-columns:1fr;gap:6px;padding:12px;min-height:0}
+.w-giorno .lez .ora{flex-direction:row;align-items:baseline;gap:8px}
+.w-giorno .lez .posti{align-items:flex-start;text-align:left;flex-direction:row;gap:6px;align-items:baseline}
+.w-giorno .lez .badge{align-items:flex-start;padding:6px 10px;min-height:0}
+.w-giorno .vuoto{padding:4px 4px 8px}
+@media (max-width:1100px){.w-sett{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:640px){.w-sett{grid-template-columns:1fr}}
+
+/* accesso: marchio grande a sinistra, modulo a destra */
+.w-login{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(24px,5vw,80px);align-items:center;min-height:calc(100svh - 120px)}
+.w-login__marchio{background:var(--barolo);border-radius:32px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;color:var(--lino)}
+.w-login__marchio svg{width:62%;height:auto}
+.w-login__form{display:flex;flex-direction:column;gap:14px;max-width:520px}
+@media (max-width:860px){.w-login{grid-template-columns:1fr;min-height:0}.w-login__marchio{aspect-ratio:auto;height:160px}.w-login__marchio svg{width:auto;height:120px}}
+
+/* riquadro "scarica l'app" con QR */
+.banner-app{flex-direction:row;align-items:center;gap:18px;border:1.5px solid var(--barolo)}
+.qr-app{width:116px;height:116px;flex:none;background:#fff;border-radius:12px;padding:6px}
+.qr-app svg{display:block;width:100%;height:100%}
+@media (max-width:480px){.banner-app{flex-direction:column;align-items:flex-start}.qr-app{display:none}}

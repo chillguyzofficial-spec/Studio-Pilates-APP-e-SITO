@@ -1,0 +1,38 @@
+/* Cento Respiri — base comune a sito e app: font locali, colori, reset */
+@font-face{font-family:'Gilda Display';font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/gilda-display-latin.woff2) format('woff2')}
+@font-face{font-family:'Hanken Grotesk';font-style:normal;font-weight:400 700;font-display:swap;src:url(../fonts/hanken-grotesk-latin.woff2) format('woff2')}
+
+:root{
+  --lino:#F3EEE5;      /* fondo */
+  --carta:#FBF8F3;     /* schede */
+  --sabbia:#E6DCCB;    /* superfici */
+  --sabbia-2:#EDE5D8;  /* riquadri informativi */
+  --riga:#DCD1BF;      /* bordi e separatori */
+  --inchiostro:#2B2620;/* testo */
+  --testo-2:#4A433A;   /* testo secondario */
+  --testo-3:#6B6257;   /* etichette */
+  --spento:#8A8075;
+  --barolo:#6A2C2E;    /* unico accento */
+  --barolo-chiaro:#C99A8F;
+  --serif:'Gilda Display',Georgia,'Times New Roman',serif;
+  --sans:'Hanken Grotesk',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:var(--lino);color:var(--inchiostro);font-family:var(--sans);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%;height:auto}
+a{color:var(--barolo)}
+button{font:inherit;color:inherit}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--barolo);outline-offset:3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* etichetta maiuscola (unico testo sotto i 16px) */
+.eti{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--barolo)}
+.eti--grigia{color:var(--testo-3);font-weight:500}
+
+/* segnaposto foto: si sostituisce da solo quando c'è assets/foto/<id>.webp */
+.ph{position:relative;background:var(--sabbia);display:flex;align-items:flex-end;overflow:hidden}
+.ph::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(135deg,transparent 0 14px,rgba(43,38,32,.035) 14px 15px)}
+.ph span{position:relative;margin:12px;padding:8px 12px;border-radius:12px;background:rgba(251,248,243,.88);font-size:12px;line-height:1.4;color:var(--testo-2)}
+.foto{width:100%;height:100%;object-fit:cover}

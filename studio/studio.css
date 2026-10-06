@@ -1,0 +1,88 @@
+/* Cento Respiri — pannello dello studio (PC e tablet, usabile anche da telefono) */
+body.studio{background:var(--lino)}
+.studio .btn{min-height:52px;padding:0 22px;border-radius:26px;border:0;background:var(--barolo);color:var(--carta);font-size:16px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
+.studio .btn--piccolo{min-height:44px;font-size:16px}
+.studio .btn--bordo{background:transparent;color:var(--inchiostro);border:1.5px solid var(--inchiostro)}
+.studio .link{min-height:44px;display:inline-flex;align-items:center;padding:0 8px;border:0;background:none;color:var(--barolo);font-size:16px;font-weight:500;cursor:pointer;text-decoration:none}
+.studio .tondo{width:44px;height:44px;border-radius:50%;border:1px solid var(--riga);background:var(--carta);font-size:22px;line-height:1;cursor:pointer;color:var(--inchiostro);padding-bottom:3px}
+.studio .vuoto{color:var(--testo-3);font-size:16px}
+.studio .sezione{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--testo-3);margin:16px 0 4px;font-weight:600}
+
+/* accesso */
+.s-accesso{max-width:520px;margin:0 auto;padding:clamp(40px,10vh,100px) 16px;display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.s-marchio{width:120px;height:120px;border-radius:28px;background:var(--barolo);color:var(--lino);display:flex;align-items:center;justify-content:center}
+.s-marchio svg{width:84px;height:84px}
+.s-accesso h1{margin:0;font-family:var(--serif);font-weight:400;font-size:clamp(34px,4vw,48px);line-height:1.05}
+.s-accesso p{margin:0;color:var(--testo-2)}
+.s-accesso .nota{font-size:16px;color:var(--testo-3)}
+
+/* testata */
+.s-testa{position:sticky;top:0;z-index:10;background:var(--lino);border-bottom:1px solid var(--riga)}
+.s-testa .in{max-width:1320px;margin:0 auto;padding:10px clamp(16px,3vw,40px);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.s-logo{display:flex;align-items:center;gap:10px}
+.s-logo svg{width:32px;height:32px;color:var(--inchiostro)}
+.s-logo svg line[stroke-width="2.2"]{stroke:var(--barolo)}
+.s-logo span{font-family:var(--serif);font-size:17px;letter-spacing:.16em;white-space:nowrap}
+.s-logo small{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--barolo);font-weight:600;padding-left:10px;border-left:1px solid var(--riga);white-space:nowrap}
+.s-giorno{display:flex;align-items:center;gap:10px;flex:1;justify-content:center;font-size:17px;white-space:nowrap}
+.s-dx{display:flex;align-items:center;gap:8px}
+@media (max-width:860px){.s-giorno{order:3;flex-basis:100%;justify-content:space-between}.s-logo small{display:none}.s-dx{margin-left:auto}}
+
+/* corpo */
+.s-corpo{max-width:1320px;margin:0 auto;padding:24px clamp(16px,3vw,40px) 60px;display:flex;flex-direction:column;gap:20px}
+.s-numeri{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.s-numeri div{background:var(--carta);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column}
+.s-numeri b{font-family:var(--serif);font-weight:400;font-size:36px;line-height:1}
+.s-numeri span{font-size:14px;color:var(--testo-3)}
+@media (max-width:640px){.s-numeri{grid-template-columns:repeat(3,minmax(0,1fr))}.s-numeri div:nth-child(n+4){display:none}}
+.s-due{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){.s-due{grid-template-columns:1fr}}
+.s-elenco{display:flex;flex-direction:column;gap:8px}
+.s-lez,.s-priv{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;padding:12px 14px;border-radius:18px;background:var(--carta);border:1.5px solid transparent;text-align:left;cursor:pointer;color:var(--inchiostro);width:100%;font:inherit}
+.s-priv{grid-template-columns:64px 1fr;cursor:default}
+.s-lez b,.s-priv b{font-family:var(--serif);font-weight:400;font-size:24px}
+.s-lez span,.s-priv span{display:flex;flex-direction:column}
+.s-lez strong,.s-priv strong{font-size:16px;font-weight:600}
+.s-lez small,.s-priv small{font-size:14px;color:var(--testo-3)}
+.s-lez em{font-style:normal;font-size:15px;font-weight:600;white-space:nowrap}
+.s-lez.sel{border-color:var(--barolo)}
+.s-lez.finita strong,.s-lez.finita b{color:var(--testo-3)}
+
+/* dettaglio lezione: i 6 lettini come in sala */
+.s-dettaglio{background:var(--carta);border-radius:24px;padding:clamp(18px,2.4vw,28px);display:flex;flex-direction:column;gap:18px}
+.s-dtesta{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.s-dtesta .eti{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--barolo);font-weight:600}
+.s-dtesta h2{margin:4px 0;font-family:var(--serif);font-weight:400;font-size:clamp(28px,3vw,38px);line-height:1.05}
+.s-dtesta p{margin:0;color:var(--testo-2)}
+.s-specchio{align-self:center;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--testo-3);border-bottom:3px solid var(--riga);padding:0 20px 4px}
+.s-lettini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:520px){.s-lettini{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.s-letto{border:1.5px solid var(--riga);border-radius:18px;padding:12px;display:flex;flex-direction:column;gap:6px;min-height:128px}
+.s-letto b{font-family:var(--serif);font-weight:400;font-size:26px;line-height:1}
+.s-letto span{font-size:16px;font-weight:600;overflow-wrap:anywhere}
+.s-letto span small{font-weight:400;color:var(--testo-3)}
+.s-letto.libero{border-style:dashed;background:transparent;color:var(--testo-3)}
+.s-letto.libero span{font-weight:400}
+.s-letto.tu{border-color:var(--barolo)}
+.s-letto.presente{background:#EFE6DA}
+.s-letto button{margin-top:auto;min-height:40px;border-radius:20px;border:1.5px solid var(--inchiostro);background:transparent;font-size:15px;font-weight:600;cursor:pointer;color:var(--inchiostro)}
+.s-letto button[aria-pressed="true"]{background:var(--barolo);border-color:var(--barolo);color:var(--carta)}
+.s-attesa h3{margin:0 0 6px;font-size:16px}
+.s-attesa ol{margin:0;padding-left:22px;color:var(--testo-2)}
+
+/* lettore QR */
+.s-scan{position:fixed;inset:0;z-index:40;background:rgba(43,38,32,.6);display:flex;align-items:center;justify-content:center;padding:16px}
+.s-scan__box{background:var(--carta);border-radius:28px;padding:20px;width:min(520px,100%);max-height:calc(100svh - 32px);overflow:auto;display:flex;flex-direction:column;gap:14px}
+.s-scan__testa{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.s-scan__testa h2{margin:0;font-family:var(--serif);font-weight:400;font-size:26px}
+.s-scan__video{position:relative;aspect-ratio:1;background:#1E1A16;border-radius:20px;overflow:hidden}
+.s-scan__video video{width:100%;height:100%;object-fit:cover}
+.s-scan__mirino{position:absolute;inset:18%;border:3px solid rgba(251,248,243,.9);border-radius:18px}
+.s-scan__msg{position:absolute;left:16px;right:16px;bottom:14px;margin:0;color:var(--carta);font-size:16px;text-align:center}
+.s-esito{border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:2px}
+.s-esito b{font-size:18px}
+.s-esito.si{background:#E7EFE0;color:#2F4A25}
+.s-esito.no{background:#F3E1DE;color:#6A2C2E}
+.s-scan__manuale{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.s-scan__manuale label{display:flex;flex-direction:column;gap:6px;font-size:16px;font-weight:500;flex:1;min-width:200px}
+.s-scan__manuale input{min-height:48px;border-radius:12px;border:1px solid var(--riga);background:var(--lino);padding:0 12px;font:inherit;font-size:17px}
